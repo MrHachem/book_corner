@@ -1,0 +1,1 @@
+export * from './Book-Card.component.tsx';
