@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.main {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    height: 75vh;
+    margin-top: 5%;
+}
+
+.container {
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.image {
+    transition: .3s all ease-in-out;
+}
+
+.image:hover {
+    transition: .3s all ease-in-out;
+    scale: 1.1;
+}

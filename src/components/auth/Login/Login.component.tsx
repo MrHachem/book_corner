@@ -39,7 +39,7 @@ export default function LoginComponent() {
     return (
         <div className={styles.main}>
             <div className={styles.container}>
-                <div className={styles.image}></div>
+                <div className={styles.imageLogin}></div>
                 <div className={styles.formLogin}>
                     <h1 style={{color:'#46586c'}}>تسجيل الدخول</h1>
                     <Box component="form" onSubmit={handleSubmit(onSubmit)}
@@ -91,15 +91,15 @@ export default function LoginComponent() {
                         </Button>
 
                     </Box>
-                    <Link to={"/login"}>انشاء حساب</Link>
+                    <Link to={"/auth/sign-up"}>انشاء حساب</Link>
                 </div>
-                {/*<div>*/}
-                {/*    <div style={{backgroundColor:"#D2E0FB"}}>D2E0FB</div>*/}
-                {/*    <div style={{backgroundColor:"#FEF9D9"}}>FEF9D9</div>*/}
-                {/*    <div style={{backgroundColor:"#DEE5D4"}}>DEE5D4</div>*/}
-                {/*    <div style={{backgroundColor:"#8EACCD"}}>8EACCD</div>*/}
+                <div>
+                   <div style={{backgroundColor:"#D2E0FB"}}>D2E0FB</div>
+                   <div style={{backgroundColor:"#FEF9D9"}}>FEF9D9</div>
+                   <div style={{backgroundColor:"#DEE5D4"}}>DEE5D4</div>
+                   <div style={{backgroundColor:"#8EACCD"}}>8EACCD</div>
 
-                {/*</div>*/}
+                </div>
             </div>
         </div>
 

@@ -15,7 +15,8 @@
 }
 
 .container {
-    padding: 17px;
+    height: 90%;
+    margin-top: 10px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     /* Two equal columns */
@@ -72,6 +73,7 @@
     flex-wrap: nowrap;
     justify-content: space-around;
     flex-direction: column;
+    margin-top: -9px;
 }
 
 .form input {
@@ -110,6 +112,7 @@
     flex-wrap: wrap;
     flex-direction: row-reverse;
     justify-content: space-around;
+    align-content: flex-start;
 }
 
 .formInput {
