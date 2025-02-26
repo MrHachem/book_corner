@@ -8,9 +8,9 @@ import {
   Button,
   Avatar,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
+  // List,
+  // ListItem,
+  // ListItemText,
   IconButton,
 } from "@mui/material";
 import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
@@ -29,11 +29,11 @@ export function ProfilePage(){
       password:"kmkk"
     });
   
-    const [favoriteBooks, setFavoriteBooks] = useState([
-      "احببتك اكثر مما ينبغي",
-      "شيفرة دافنشي",
-      "اين المفر",
-    ]);
+    // const [favoriteBooks, setFavoriteBooks] = useState([
+    //   "احببتك اكثر مما ينبغي",
+    //   "شيفرة دافنشي",
+    //   "اين المفر",
+    // ]);
   
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;

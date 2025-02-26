@@ -19,9 +19,8 @@ export function BookCardComponent({ name, author,bookCategory,image,bookId }: { 
         <Card xs={12} sx={{width: 1, borderRadius: "20px" ,fontFamily:"Cairo, sans-serif",maxHeight: '533px',
             minHeight: '524px'}}>
             <CardMedia
-                sx={{marginY: 2, borderRadius: "20px"}}
+                sx={{margin: 2,objectFit: "contain",width: '90%'}}
                 component="img"
-                height="225"
                 image={image}
                 alt="Service sd;"
             />

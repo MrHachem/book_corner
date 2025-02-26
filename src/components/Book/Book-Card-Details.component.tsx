@@ -48,7 +48,7 @@ interface BookDetails {
             setBook(data);
 
           } catch(error){
-            console.log("error")
+            console.log(error)
 
           } finally {
               setLoading(false)
@@ -57,7 +57,7 @@ interface BookDetails {
         }
         fetchData();
 
-    },[bookId]);
+    },[bookId,navigate]);
 
   //Edit the rateing
     useEffect(()=>{
@@ -103,7 +103,6 @@ interface BookDetails {
 
                   }}
                 >
-                  {/* Overlay for darker opacity */}
                 
                   {/* Content on top of the background */}
                   <Box

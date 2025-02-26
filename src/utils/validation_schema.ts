@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 
 
-type validationArgument = 'email' | 'password'|'password_confirmation';
+type validationArgument = 'email' | 'password'|'password_confirmation'|'phone'|'lastname'|'firstname';
 export function getValidationObject(validationArguments: validationArgument[]) {
     const validationSchema: Record<string, Yup.AnySchema> = {};
 
@@ -29,7 +29,18 @@ export function getValidationObject(validationArguments: validationArgument[]) {
                 .required('Password confirmation is required')
                 .oneOf([Yup.ref('password'), ' '], 'Password confirmation must match');
             break;
-
+            case "phone":
+            validationSchema["phone"] = Yup.string()
+            .required('phone is required');
+            break;
+            case "lastname":
+            validationSchema["lastname"] = Yup.string()
+            .required('last name is required');
+            break;
+            case "firstname":
+            validationSchema["firstname"] = Yup.string()
+            .required('firstname is required');
+            break;
             default:
                 throw new Error(`Unsupported validation argument: ${validationArgument}`);
         }

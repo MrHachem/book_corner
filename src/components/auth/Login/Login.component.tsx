@@ -31,7 +31,6 @@ export default function LoginComponent() {
 
     const onSubmit = async (data: FormData) => {
         setDisabledState(true);
-        console.log("LoginComponent successful", data.email);
         setDisabledState(false);
     };
 
@@ -93,13 +92,13 @@ export default function LoginComponent() {
                     </Box>
                     <Link to={"/auth/sign-up"}>انشاء حساب</Link>
                 </div>
-                <div>
+                {/* <div>
                    <div style={{backgroundColor:"#D2E0FB"}}>D2E0FB</div>
                    <div style={{backgroundColor:"#FEF9D9"}}>FEF9D9</div>
                    <div style={{backgroundColor:"#DEE5D4"}}>DEE5D4</div>
                    <div style={{backgroundColor:"#8EACCD"}}>8EACCD</div>
 
-                </div>
+                </div> */}
             </div>
         </div>
 

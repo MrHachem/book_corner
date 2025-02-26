@@ -1,4 +1,6 @@
 import {Routes, Route} from 'react-router-dom';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AllBooksPage from "./pages/allBooks/all-books.tsx";
 import LoginPage from "./pages/auth/login/login.tsx";
 import {Layout}   from "./components/Layout/Layout.component.tsx"
@@ -17,6 +19,7 @@ function App() {
     return(
         <ThemeProvider theme={theme}>
                 <CssBaseline />
+                <ToastContainer />
                 <Routes>
                         <Route path="/auth/login" element={<LoginPage/>}/>
                         <Route path="/auth/sign-up" element={<SignUpPage/>}/>

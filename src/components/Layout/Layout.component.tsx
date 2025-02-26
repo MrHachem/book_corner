@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Outlet , Link } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, CssBaseline, Toolbar, Typography, IconButton, Button, Drawer, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Avatar } from '@mui/material';
+import { Box, CssBaseline, Toolbar, Typography, IconButton, Button, Drawer, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
