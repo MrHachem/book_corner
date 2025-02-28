@@ -11,8 +11,9 @@ import FormLabel from '@mui/material/FormLabel';
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import {getValidationObject} from "../../../utils/validation_schema.ts";
-import { authServices } from "../../../ services/authServices.ts";
+import { authServices } from "../../../ services/api/authServices.ts";
 import { showNotifications } from "../../../utils/notifications.ts";
+import { useAuth } from "../../../context/AuthContext.tsx";
 
 
 type FormData = {
@@ -30,6 +31,7 @@ export default function SignUpComponent() {
 
     const formOptions = getValidationObject(["email", "password","password_confirmation","phone","lastname","firstname"]);
     const { register, handleSubmit,control, formState: { errors } } = useForm<FormData>(formOptions);
+    const {setToken} = useAuth();
     const navigate = useNavigate();
     const [disabledState ,setDisabledState]=useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -54,7 +56,7 @@ export default function SignUpComponent() {
     const onSubmit = async (data: FormData) => {
         setDisabledState(true);
         try{
-            const response = await authServices.register(data);
+            const response = await authServices.register(data,setToken);
             if(response?.status === 200){
                 showNotifications("تم إنشاء الحساب بنجاح! 🎉","success")
                 navigate(`/all-books`);

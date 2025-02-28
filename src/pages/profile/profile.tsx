@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -17,8 +17,26 @@ import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
 import { BookOpenCheck } from 'lucide-react';
 import { Star } from 'lucide-react';
 import { BookX } from 'lucide-react';
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { showNotifications } from "../../utils/notifications";
+
+
 
 export function ProfilePage(){
+
+      const navigate = useNavigate()
+      const {token} = useAuth();
+
+      useEffect(() => {
+        if(!token) {
+          showNotifications("Cannot accsess to profile page without signin","warning");
+          showNotifications("please signin if you have an account","warning")
+
+          navigate('/auth/login');
+        }
+    }, [navigate]);
+
     const [editMode, setEditMode] = useState(false);
 
     const [profile, setProfile] = useState({

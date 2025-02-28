@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Outlet , Link } from 'react-router-dom';
+import { Outlet , Link, useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import { Box, CssBaseline, Toolbar, Typography, IconButton, Button, Drawer, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
@@ -10,9 +10,13 @@ import EngineeringOutlinedIcon from '@mui/icons-material/EngineeringOutlined';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
 import FaceIcon from '@mui/icons-material/Face';
-import { BookOpenCheck } from 'lucide-react';
+import { BookOpenCheck, LogOut, LogOutIcon } from 'lucide-react';
 import { BookX } from 'lucide-react';
 import { Star } from 'lucide-react';
+import Cookies from "js-cookie";
+import { authServices } from '../../ services/api/authServices';
+import { showNotifications } from '../../utils/notifications';
+import { useAuth } from '../../context/AuthContext';
 
 
 
@@ -85,6 +89,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export function Layout(props : ChildrenComponent) {
   const theme = useTheme();
+  const {token,setToken } = useAuth();
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -94,6 +100,14 @@ export function Layout(props : ChildrenComponent) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  
+  const handleLogout = async()=>{
+    const response = await authServices.Logout(setToken);
+    if(response?.status === 200){
+      showNotifications("Logout succses",'success');
+      navigate(`/all-books`);
+    }
+  }
 
   return (
     <Box sx={{ display: 'flex', bgcolor: theme.palette.background.default }}>
@@ -112,17 +126,32 @@ export function Layout(props : ChildrenComponent) {
   
           </Typography>
           <Box sx={{ display: 'flex', gap: 2 }}>
-            <Link to="/auth/login" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Button color="inherit">Login</Button>
-            </Link>
-            <Link to="/auth/sign-up" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Button color="inherit">Sign Up</Button>
-            </Link> 
-            <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <IconButton color="inherit">
-                  <AccountCircleIcon />
-              </IconButton>
-            </Link>
+            {token?
+             (
+              <>
+                 <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <IconButton color="inherit">
+                        <AccountCircleIcon />
+                    </IconButton>
+                 </Link>
+                 <IconButton onClick={handleLogout} color="inherit">
+                      <LogOutIcon />
+                  </IconButton>
+              </>
+           
+              
+              ):(
+              <>
+                 <Link to="/auth/login" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Button color="inherit">Login</Button>
+                </Link>
+                <Link to="/auth/sign-up" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Button color="inherit">Sign Up</Button>
+                </Link>
+              </>
+            )}
+          
+            
           </Box>
           <IconButton
             color="inherit"
@@ -165,7 +194,7 @@ export function Layout(props : ChildrenComponent) {
                         { text: 'الكتب غير المكتملة', link: '/all-books', icon: <BookX style={{ color: "#455769" }} /> },
                         { text: 'الكتب التي تم تقييمها', link: '/all-books', icon: <Star style={{ color: "#455769" }} /> },
                         { text: 'حسابات المستخدمين', link: '/users-accounts', icon: <FaceIcon sx={{ color: "#455769" }} /> }, 
-                        { text: 'تسجيل دخول', link: '/auth/login', icon: <EngineeringOutlinedIcon sx={{ color: "#455769" }} /> }, 
+                       // { text: 'تسجيل خروج', link: '/auth/login', icon: <EngineeringOutlinedIcon sx={{ color: "#455769" }} /> }, 
                     ].map((item, index) => (
                         <ListItem key={index} disablePadding sx={{ display: 'block' , textAlignLast: 'end' }}>
                             <Link to ={item.link} style={{textDecoration:"none" , color:'#455769'}}>
@@ -190,8 +219,11 @@ export function Layout(props : ChildrenComponent) {
                                 </ListItemButton>
                             </Link>
                         </ListItem>
+                        
                     ))}
-                </List>
+                    
+                
+        </List>
       </Drawer>
     </Box>
   );

@@ -18,6 +18,7 @@ export default function AllBooksPage() {
 
     const [books, setBooks] = useState<Book[]>([]);
     const [openAddBook ,setOpenAddBook] = useState(false);
+    const userType = localStorage.getItem("userType");
 
     useEffect(()=>{
         const fetchData = async() => {
@@ -42,27 +43,29 @@ export default function AllBooksPage() {
         px:1
         }}
         >
-           
+           {userType ==="admin" &&  
             <Box sx={{
-                    m: 2,
-                    display: 'flex',
-                    gap: 2,
-                    justifyContent: 'end',
-                    alignItems: 'center',
-                }}>
-                        <Button  
-                            sx={{ padding:"10px",
-                                borderRadius: "10px",
-                                fontSize:"1rem",
-                                fontFamily:"Cairo, sans-serif",
-                                bgcolor:"#4b7fb2"}}
-                            variant="contained"
-                            endIcon={<AddIcon sx={{marginRight: 2}}/>}
-                            onClick={handleClickOpen}>
-                                        إضافة كتاب
-                        </Button>
-                    
-            </Box>
+                        m: 2,
+                        display: 'flex',
+                        gap: 2,
+                        justifyContent: 'end',
+                        alignItems: 'center',
+                    }}>
+                            <Button  
+                                sx={{ padding:"10px",
+                                    borderRadius: "10px",
+                                    fontSize:"1rem",
+                                    fontFamily:"Cairo, sans-serif",
+                                    bgcolor:"#4b7fb2"}}
+                                variant="contained"
+                                endIcon={<AddIcon sx={{marginRight: 2}}/>}
+                                onClick={handleClickOpen}>
+                                            إضافة كتاب
+                            </Button>
+                        
+                </Box>
+            }   
+           
 
             <Grid container spacing={2} justifyContent={"center"}>
 
@@ -74,7 +77,7 @@ export default function AllBooksPage() {
                         name={book.title}
                         author={book.author}
                         bookCategory={book.bookCategory}
-                        image={book.image}
+                        image={"/public/Atomic_Habits.jpg"}
                         bookId={book.id}
                     /></Grid>
     

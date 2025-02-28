@@ -23,7 +23,7 @@ export const showNotifications = (message: string, type: "success" | "error" | "
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true,
-                theme: "dark",
+                theme: "light",
             });
             break;
         case "info":
@@ -34,7 +34,7 @@ export const showNotifications = (message: string, type: "success" | "error" | "
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true,
-                theme: "dark",
+                theme: "light",
             });
             break;
         case "warning":
@@ -45,7 +45,7 @@ export const showNotifications = (message: string, type: "success" | "error" | "
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true,
-                theme: "dark",
+                theme: "colored",
             });
             break;
         default:
@@ -56,7 +56,7 @@ export const showNotifications = (message: string, type: "success" | "error" | "
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true,
-                theme: "dark",
+                theme: "light",
             });
     }
 };
