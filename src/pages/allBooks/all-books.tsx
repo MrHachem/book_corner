@@ -38,40 +38,37 @@ export default function AllBooksPage() {
     };
     return (
         <Box className={'w-100'}
-             sx={{
-                 width: '100%',
-        px:1
-        }}
+             sx={{width: '100%',px:1}}
         >
-           {userType ==="admin" &&  
-            <Box sx={{
-                        m: 2,
-                        display: 'flex',
-                        gap: 2,
-                        justifyContent: 'end',
-                        alignItems: 'center',
-                    }}>
-                            <Button  
-                                sx={{ padding:"10px",
-                                    borderRadius: "10px",
-                                    fontSize:"1rem",
-                                    fontFamily:"Cairo, sans-serif",
-                                    bgcolor:"#4b7fb2"}}
-                                variant="contained"
-                                endIcon={<AddIcon sx={{marginRight: 2}}/>}
-                                onClick={handleClickOpen}>
-                                            إضافة كتاب
-                            </Button>
-                        
-                </Box>
-            }   
-           
+            {userType ==="admin" &&  
+                <Box sx={{
+                            mt: 2,
+                            display: 'flex',
+                            gap: 2,
+                            justifyContent: 'end',
+                            alignItems: 'center',
+                        }}>
+                                <Button  
+                                    sx={{ padding:"10px",
+                                        borderRadius: "10px",
+                                        fontSize:"1rem",
+                                        fontFamily:"Cairo, sans-serif",
+                                        bgcolor:"#4b7fb2"}}
+                                    variant="contained"
+                                    endIcon={<AddIcon sx={{marginRight: 2}}/>}
+                                    onClick={handleClickOpen}>
+                                                إضافة كتاب
+                                </Button>
+                            
+                    </Box>
+                }   
+            
 
-            <Grid container spacing={2} justifyContent={"center"}>
+            <Grid container spacing={2} justifyContent={"space-evenly"}>
 
             {books.map((book) => (
                 
-                     <Grid item xs={12} sm={6} md={4} lg={3} sx={{
+                     <Grid item xs={12} sm={6} md={3} lg={3} sx={{
                         marginY: 3
                     }}> <BookCardComponent
                         name={book.title}
@@ -80,7 +77,6 @@ export default function AllBooksPage() {
                         image={"/public/Atomic_Habits.jpg"}
                         bookId={book.id}
                     /></Grid>
-    
             ))}
 
             </Grid>

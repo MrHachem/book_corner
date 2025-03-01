@@ -64,7 +64,7 @@ export default function SignUpComponent() {
           
         }
         catch(error){
-            console.log("خطأ غير متوقع! حاول مرة أخرى.", "error");
+            console.log("خطأ غير متوقع! حاول مرة أخرى.",error);
         }
       
         setDisabledState(false);

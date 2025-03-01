@@ -1,7 +1,6 @@
 import Cookies from "js-cookie";
-import { showNotifications } from "../../utils/notifications";
+import { showNotifications } from "../../utils/notifications"
 import axiosInstance from "../axiosInstance";
-import { createContext, useContext } from "react";
 
 
 
@@ -36,7 +35,7 @@ const register = async(data:RegisterData,setToken: (token: string | null) => voi
         localStorage.setItem("profile",profile);
 
 
-        setToken(token  )
+        setToken(token)
 
         return{
             data:result,

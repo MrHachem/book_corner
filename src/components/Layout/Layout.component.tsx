@@ -1,29 +1,29 @@
 import * as React from 'react';
 import { Outlet , Link, useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, CssBaseline, Toolbar, Typography, IconButton, Button, Drawer, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, CssBaseline, Toolbar, Typography, IconButton, Button, Drawer, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import EngineeringOutlinedIcon from '@mui/icons-material/EngineeringOutlined';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
 import FaceIcon from '@mui/icons-material/Face';
-import { BookOpenCheck, LogOut, LogOutIcon } from 'lucide-react';
+import { BookOpenCheck, LogOutIcon } from 'lucide-react';
 import { BookX } from 'lucide-react';
 import { Star } from 'lucide-react';
-import Cookies from "js-cookie";
 import { authServices } from '../../ services/api/authServices';
 import { showNotifications } from '../../utils/notifications';
 import { useAuth } from '../../context/AuthContext';
 
 
+type SidebarContextType = { open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>> };
+export const SidebarContext = React.createContext<SidebarContextType | undefined>(undefined);
 
-interface ChildrenComponent 
-{
-    children? : React.ReactNode
-}
+// interface ChildrenComponent 
+// {
+//     children? : React.ReactNode
+// }
 
 const drawerWidth = 240;
 
@@ -87,8 +87,10 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-start',
 }));
 
-export function Layout(props : ChildrenComponent) {
+export function Layout() {
+
   const theme = useTheme();
+  const userType = localStorage.getItem("userType")
   const {token,setToken } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -108,8 +110,20 @@ export function Layout(props : ChildrenComponent) {
       navigate(`/all-books`);
     }
   }
+  const menuItems = [
+    { text: 'الكتب', link: '/all-books', icon: <AutoStoriesOutlinedIcon sx={{ color: "#455769" }} /> },
+    { text: 'الكتب المقروءة', link: '/all-books', icon: <BookOpenCheck style={{ color: "#455769" }} /> },
+    { text: 'الكتب غير المكتملة', link: '/all-books', icon: <BookX style={{ color: "#455769" }} /> },
+    { text: 'الكتب التي تم تقييمها', link: '/all-books', icon: <Star style={{ color: "#455769" }} /> },
+];
+
+    // إضافة خيار "حسابات المستخدمين" فقط إذا كان المستخدم admin أو owner
+    if (userType === "admin" || userType === "owner") {
+        menuItems.push({ text: 'حسابات المستخدمين', link: '/users-accounts', icon: <FaceIcon sx={{ color: "#455769" }} /> });
+    }
 
   return (
+    <SidebarContext.Provider value={{ open, setOpen }}>
     <Box sx={{ display: 'flex', bgcolor: theme.palette.background.default }}>
       <CssBaseline />
       <AppBar position="fixed" sx={{ bgcolor: theme.palette.primary.main }} open={open}>
@@ -129,14 +143,19 @@ export function Layout(props : ChildrenComponent) {
             {token?
              (
               <>
-                 <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <IconButton color="inherit">
-                        <AccountCircleIcon />
+                 <Tooltip title="Profile">
+                    <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <IconButton color="inherit">
+                            <AccountCircleIcon />
+                        </IconButton>
+                    </Link>
+                 </Tooltip>
+                
+                  <Tooltip title="تسجيل خروج">
+                    <IconButton onClick={handleLogout} color="inherit">
+                        <LogOutIcon />
                     </IconButton>
-                 </Link>
-                 <IconButton onClick={handleLogout} color="inherit">
-                      <LogOutIcon />
-                  </IconButton>
+                  </Tooltip>
               </>
            
               
@@ -166,7 +185,7 @@ export function Layout(props : ChildrenComponent) {
       </AppBar>
       <Main open={open}>
         <DrawerHeader />
-        <Outlet /> 
+        <Outlet/>
       </Main>
       <Drawer
         sx={{
@@ -187,15 +206,7 @@ export function Layout(props : ChildrenComponent) {
         </DrawerHeader>
         <Divider />
         <List sx={{ direction: 'rlt' }}>
-                    {[
-
-                        { text: 'الكتب', link: '/all-books', icon: <AutoStoriesOutlinedIcon sx={{ color: "#455769" }} /> },
-                        { text: 'الكتب المقروءة', link: '/all-books', icon: <BookOpenCheck style={{ color: "#455769" }} /> },
-                        { text: 'الكتب غير المكتملة', link: '/all-books', icon: <BookX style={{ color: "#455769" }} /> },
-                        { text: 'الكتب التي تم تقييمها', link: '/all-books', icon: <Star style={{ color: "#455769" }} /> },
-                        { text: 'حسابات المستخدمين', link: '/users-accounts', icon: <FaceIcon sx={{ color: "#455769" }} /> }, 
-                       // { text: 'تسجيل خروج', link: '/auth/login', icon: <EngineeringOutlinedIcon sx={{ color: "#455769" }} /> }, 
-                    ].map((item, index) => (
+                    {menuItems.map((item, index) => (
                         <ListItem key={index} disablePadding sx={{ display: 'block' , textAlignLast: 'end' }}>
                             <Link to ={item.link} style={{textDecoration:"none" , color:'#455769'}}>
                                 <ListItemButton
@@ -226,5 +237,6 @@ export function Layout(props : ChildrenComponent) {
         </List>
       </Drawer>
     </Box>
+    </SidebarContext.Provider>
   );
 }

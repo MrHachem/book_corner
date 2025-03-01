@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -35,17 +35,19 @@ export function ProfilePage(){
 
           navigate('/auth/login');
         }
-    }, [navigate]);
-
+    }, [navigate,token]);
+    const profile_string = localStorage.getItem("profile");
+    const profile = profile_string ? JSON.parse(profile_string):{} ;
+    console.log("profile",profile)
     const [editMode, setEditMode] = useState(false);
 
-    const [profile, setProfile] = useState({
-      name: "sedra harb",
-      email: "sedraharb58@gmail.com",
-      phone:"094668909098",
-      password_confirmation:"msmdls",
-      password:"kmkk"
-    });
+    // const [profile, setProfile] = useState({
+    //   name: "sedra harb",
+    //   email: "sedraharb58@gmail.com",
+    //   phone:"094668909098",
+    //   password_confirmation:"msmdls",
+    //   password:"kmkk"
+    // });
   
     // const [favoriteBooks, setFavoriteBooks] = useState([
     //   "احببتك اكثر مما ينبغي",
@@ -53,9 +55,9 @@ export function ProfilePage(){
     //   "اين المفر",
     // ]);
   
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setProfile({ ...profile, [name]: value });
+    const handleInputChange = () => {
+      //const { name, value } = e.target;
+      //setProfile({ ...profile, [name]: value });
     };
   
     const toggleEditMode = () => {
@@ -104,9 +106,15 @@ export function ProfilePage(){
                          />
                            <TextField
                            fullWidth
-                           label="password"
-                           name="password"
-                           value={profile.password}
+                           label="current password"
+                           name="current_password"
+                           onChange={handleInputChange}
+                           sx={{ mb: 2 }}
+                         />
+                           <TextField
+                           fullWidth
+                           label="new password"
+                           name="new_password"
                            onChange={handleInputChange}
                            sx={{ mb: 2 }}
                          />
@@ -123,14 +131,13 @@ export function ProfilePage(){
                       ):
                       (
                         <>
-                          <Typography variant="h6">{profile.name}</Typography>
-                          <Typography color="textSecondary">{profile.email}</Typography>
-                          <Typography color="textSecondary">{profile.phone}</Typography>
-                          <Typography color="textSecondary">password : {profile.password}</Typography>
+                          <Typography variant="h6">{profile.firstname} {profile.lastname}</Typography>
+                          <Typography color="textSecondary">Email: {profile.email}</Typography>
+                          <Typography color="textSecondary">Phone: {profile.phone}</Typography>
+                          {/* <Typography color="textSecondary">password : {profile.password}</Typography> */}
                         </>
                       )}
                      
-
                         <Button
                         variant="contained"
                         sx={{ mt: 2}}

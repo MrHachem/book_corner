@@ -19,20 +19,21 @@ export function BookCardComponent({ name, author,bookCategory,image,bookId }: { 
 
     return (
         // @ts-ignore
+        //@ts-expect-error
         <Card xs={12} 
         sx={{ 
-            width: 1, 
+            width: 0.9, 
             borderRadius: "20px", 
             fontFamily: "Cairo, sans-serif", 
-            maxHeight: '484px',
-            minHeight: '480px',
+            maxHeight: '480px',
+            minHeight: '350px',
             position: "relative",
            
-            "&:hover .hover-box": { // عند تمرير المؤشر على الكارد
+            "&:hover .hover-box": { 
                 opacity: 1,
                 transform: "translateY(0)"
             },
-            "&:hover .hover-image": { // عند تمرير المؤشر على الكارد
+            "&:hover .hover-image": {
                  filter: "brightness(0.6)"
             }
             
@@ -53,7 +54,6 @@ export function BookCardComponent({ name, author,bookCategory,image,bookId }: { 
             alt="Service Image"
         />
     
-        {/* الصندوق الذي يحوي المحتوى ويظهر عند hover */}
         <Box className="hover-box" 
             sx={{
                 position: "absolute",
@@ -61,18 +61,18 @@ export function BookCardComponent({ name, author,bookCategory,image,bookId }: { 
                 left: 0,
                 width: "100%",
                 height: "100%",
-                opacity: 0, // إخفاء افتراضيًا
-                transform: "translateY(100%)", // يبدأ من الأسفل
+                opacity: 0,
+                transform: "translateY(100%)", 
                 transition: "opacity 0.5s ease-in-out, transform 0.5s ease-in-out",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "end"
             }}
         >
-            {/* العنوان */}
+           
             <CardHeader
                 sx={{
-                    background: "rgba(255, 255, 255, 0.8)", // شفافية خفيفة للخلفية
+                    background: "rgba(255, 255, 255, 0.8)",
                     padding: "10px",
                     transition: "all 0.3s ease-in-out"
                 }}
@@ -80,7 +80,7 @@ export function BookCardComponent({ name, author,bookCategory,image,bookId }: { 
                     <Avatar 
                     sx={{ 
                         bgcolor: '#4b7fb2', 
-                        width: 56, // يمكنك ضبط الحجم حسب الحاجة
+                        width: 56,
                         height: 56, 
                     }} 
                     aria-label="recipe"
@@ -105,7 +105,7 @@ export function BookCardComponent({ name, author,bookCategory,image,bookId }: { 
                 }
             />
     
-            {/* محتوى البطاقة */}
+        
             <CardContent sx={{
                 direction: "rtl",
                 background: "rgba(255, 255, 255, 0.8)",
@@ -120,7 +120,6 @@ export function BookCardComponent({ name, author,bookCategory,image,bookId }: { 
                 </Typography>
             </CardContent>
     
-            {/* الأزرار */}
             <CardActions sx={{
                 background: "rgba(255, 255, 255, 0.8)",
                 padding: "10px",
@@ -128,6 +127,20 @@ export function BookCardComponent({ name, author,bookCategory,image,bookId }: { 
                 justifyContent: "center",
                 transition: "all 0.3s ease-in-out"
             }}>
+                {userType === "admin" && (
+                       <>
+                       <Tooltip title="حذف الكتاب">
+                           <IconButton aria-label="add" onClick={handleNavigate}>
+                               <DeleteIcon />
+                           </IconButton>
+                       </Tooltip>
+                       <Tooltip title="تعديل الكتاب">
+                           <IconButton aria-label="add" onClick={handleNavigate}>
+                               <EditIcon />
+                           </IconButton>
+                       </Tooltip>
+                       </>
+                )}
                 <Tooltip title="تفاصيل الكتاب">
                     <IconButton aria-label="add" onClick={handleNavigate}>
                         <ReadMoreIcon />

@@ -6,9 +6,9 @@ import {Box, Button, InputAdornment, TextField} from "@mui/material";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import {getValidationObject} from "../../../utils/validation_schema.ts";
-import { authServices } from "../../../ services/api/authServices.ts";
 import { showNotifications } from "../../../utils/notifications.ts";
 import { useAuth } from "../../../context/AuthContext.tsx";
+import { authServices } from "../../../ services/api/authServices.ts";
 
 
 type FormData = {
