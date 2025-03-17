@@ -14,12 +14,14 @@ const getUsers = async () => {
       data: result,
       status: response?.status,
     };
-  } catch (error) {
-    console.log("error", error);
+  } catch (error: any) {
+    const errorDetails = error?.response?.data?.message || {};
+    console.log(error);
+    showNotifications(errorDetails, "error");
   }
 };
 
-const toggleAccountActiveStatus = async (id:number) => {
+const toggleAccountActiveStatus = async (id: number) => {
   try {
     const response = await axiosInstance.post(`${TOGGLESTATUS}${id}`);
     const result = response?.data;
@@ -33,7 +35,6 @@ const toggleAccountActiveStatus = async (id:number) => {
     const errorDetails = error?.response?.data?.message || {};
     console.log(error);
     showNotifications(errorDetails, "error");
-    
   }
 };
 

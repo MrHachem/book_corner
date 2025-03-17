@@ -25,8 +25,8 @@ export function BookCardComponent({ name, author,bookCategory,image,bookId }: { 
             width: 0.9, 
             borderRadius: "20px", 
             fontFamily: "Cairo, sans-serif", 
-            maxHeight: '480px',
-            minHeight: '350px',
+            maxHeight: '380px',
+            minHeight: '380px',
             position: "relative",
            
             "&:hover .hover-box": { 
@@ -42,8 +42,9 @@ export function BookCardComponent({ name, author,bookCategory,image,bookId }: { 
         {/* صورة الكتاب */}
         <CardMedia className="hover-image" 
             sx={{
-                margin: 2, 
-                objectFit: "contain", 
+                marginX: 2, 
+                marginY: 3,
+                objectFit: "cover", 
                 width: '90%', 
                 transition: "all 0.3s ease-in-out",
                 filter: "brightness(1)",

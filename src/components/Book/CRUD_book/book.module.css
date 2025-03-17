@@ -1,0 +1,31 @@
+.dropzoneApp {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    max-width: 50%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    padding: 8px;
+}
+
+.dropzone {
+    border: 3px rgb(129 130 170) dashed;
+    padding: 9px;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+    color: rgb(41, 41, 75);
+    max-width: 100%;
+    transition: all 0.3s ease-in-out;
+    font-family: Cairo, sans-serif;
+    font-size: large;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+
+.dropzone:hover {
+    background-color: rgba(231, 228, 222, 0.747);
+    scale: calc(1.04);
+}

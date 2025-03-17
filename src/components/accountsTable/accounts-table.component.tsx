@@ -74,7 +74,6 @@ export default function UsersAccountTable() {
 
   const context = useContext(SidebarContext);
   if (!context) {
-    console.error("SidebarContext is undefined! Ensure it's inside Layout.");
     return null;
   }
   console.log("context", context);

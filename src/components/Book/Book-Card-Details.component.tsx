@@ -23,7 +23,14 @@ interface BookDetails {
     
     const navigate = useNavigate();
     const {bookId} = useParams();
-    const [book, setBook] = useState<BookDetails>({});
+    const [book, setBook] = useState<BookDetails>({
+      id: 0,
+      title: "",
+      author: "",
+      bookCategory:"",
+      image:"",
+      discreption: ""
+    });
     const [loading, setLoading] = useState(true);
     const [ratingValue, setRatingValue] =useState<number | null>(2);
 
