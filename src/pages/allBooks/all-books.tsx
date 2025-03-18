@@ -65,21 +65,8 @@ export default function AllBooksPage() {
             alignItems: "center",
           }}
         >
-          {/* <Button
-            sx={{
-              padding: "10px",
-              borderRadius: "10px",
-              fontSize: "1rem",
-              fontFamily: "Cairo, sans-serif",
-              bgcolor: "#4b7fb2",
-            }}
-            variant="contained"
-            endIcon={<AddIcon sx={{ marginRight: 2 }} />}
-            onClick={handleClickOpen}
-          >
-            إضافة كتاب
-          </Button> */}
-          <Tooltip title="تسجيل خروج">
+        
+          <Tooltip title="Add new book">
             <IconButton
               onClick={handleClickOpen}
               color="inherit"
