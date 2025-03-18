@@ -14,7 +14,7 @@ export function BookCardComponent({ name, author,bookCategory,image,bookId }: { 
     const userType = localStorage.getItem("userType");
     const navigate = useNavigate();
     const handleNavigate =()=>{
-        navigate(`/all-books/${bookId}`);
+        navigate(`/all-books/book/${bookId}`);
     }
 
     return (

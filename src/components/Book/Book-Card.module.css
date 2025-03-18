@@ -2,3 +2,52 @@
 * {
     font-family: "Cairo", "sans-serif";
 }
+
+.error {
+    margin-top: 15px;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.errorCard {
+    padding: 39px;
+    text-align: center;
+    background-image: linear-gradient(4deg, #000000, #37348ba6, #2f3f5acf 300px);
+    max-width: 800px;
+    border-radius: 10px;
+    color: rgb(255 255 255 / 87%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.errorImage {
+    width: 80%;
+    max-width: 200px;
+    margin-bottom: 15px;
+}
+
+.errorMessage {
+    font-size: 1.9rem;
+    text-align: center;
+}
+
+@media screen and (min-width: 600px) {
+    .errorCard {
+        flex-direction: row;
+        padding: 40px;
+    }
+    .errorImage {
+        flex: 1;
+        max-width: 40%;
+        margin-bottom: 0;
+    }
+    errorMessage {
+        flex: 2;
+        padding-left: 20px;
+        text-align: left;
+    }
+}
