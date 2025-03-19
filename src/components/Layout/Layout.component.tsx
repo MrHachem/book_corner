@@ -131,7 +131,7 @@ export function Layout() {
   const menuItems = [
     {
       text: "ALL BOOKS",
-      link: "/all-books/books",
+      link: "/all-books/booksType/books",
       icon: <AutoStoriesOutlinedIcon sx={{ color: "#455769" }} />,
     },
   ];
@@ -147,18 +147,18 @@ export function Layout() {
   if(token){
     menuItems.push( {
       text: "MY READ BOOKS",
-      link: "/all-books/readBooks",
+      link: "/all-books/booksType/readBooks",
       icon: <BookOpenCheck style={{ color: "#455769" }} />,
     },
     {
       text: "MY UNREAD BOOKS",
-      link: "/all-books/unReadBooks",
+      link: "/all-books/booksType/unReadBooks",
       icon: <BookX style={{ color: "#455769" }} />,
     },
     // { text: 'الكتب التي تم تقييمها', link: '/all-books', icon: <Star style={{ color: "#455769" }} /> },
     {
       text: "MY FAVORITE BOOKS",
-      link: "/all-books/favoriteBooks",
+      link: "/all-books/booksType/favoriteBooks",
       icon: <Star style={{ color: "#455769" }} />,
     },)
   }

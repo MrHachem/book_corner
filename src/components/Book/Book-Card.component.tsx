@@ -16,6 +16,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import Tooltip from "@mui/material/Tooltip";
 import { Favorite } from "@mui/icons-material";
 import styles from "./Book-Card.module.css";
+import { BookOpenCheck } from "lucide-react";
 
 export function BookCardComponent({
   name,
@@ -116,33 +117,33 @@ export function BookCardComponent({
             transition: "all 0.3s ease-in-out",
           }}
         >
-          {userType === "admin" && (
+          {(userType === "admin"|| userType === "owner") && (
             <>
-              <Tooltip title="حذف الكتاب">
-                <IconButton aria-label="add" onClick={handleNavigate}>
+              <Tooltip title="Delete Book">
+                <IconButton aria-label="delete" onClick={handleNavigate}>
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="تعديل الكتاب">
-                <IconButton aria-label="add" onClick={handleNavigate}>
+              <Tooltip title="Edit Book">
+                <IconButton aria-label="edit" onClick={handleNavigate}>
                   <EditIcon />
                 </IconButton>
               </Tooltip>
             </>
           )}
-          <Tooltip title="تفاصيل الكتاب">
+          <Tooltip title="Book Details">
             <IconButton aria-label="add" onClick={handleNavigate}>
               <ReadMoreIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="إضافة إلى المفضلة">
+          <Tooltip title="Add to Favorites">
             <IconButton aria-label="favorite">
               <Favorite />
             </IconButton>
           </Tooltip>
-          <Tooltip title="إضافة إلى مقروءة">
-            <IconButton aria-label="favorite">
-              <Favorite />
+          <Tooltip title="Read">
+            <IconButton aria-label="read">
+              <BookOpenCheck />
             </IconButton>
           </Tooltip>
         </CardActions>

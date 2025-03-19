@@ -2,10 +2,11 @@ import { AddBook, BookCardComponent } from "../../components";
 import { Box, Grid, IconButton, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { booksServices } from "../../ services/books/booksServices";
 import styles from "../../components/Book/Book-Card.module.css";
 import { useAuth } from "../../context/AuthContext";
+import { showNotifications } from "../../utils/notifications";
 
 interface Book {
   id: number;
@@ -20,6 +21,7 @@ export default function AllBooksPage() {
   const { token } = useAuth();
   const [books, setBooks] = useState<Book[]>([]);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const { booksState } = useParams();
   const [openAddBook, setOpenAddBook] = useState(false);
@@ -32,6 +34,8 @@ export default function AllBooksPage() {
         const response = await booksServices.allBooks(booksState || "books");
         if (response?.status === 200) {
           setBooks(response?.data?.books);
+        } else if (response?.status === 404) {
+          navigate("*");
         } else {
           setError(
             "There are no books or perhaps there was an error, please try again."

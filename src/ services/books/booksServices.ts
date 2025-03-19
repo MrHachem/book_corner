@@ -26,7 +26,27 @@ const allBooks = async (booksState: string) => {
       data: result,
       status: response?.status,
     };
-  } catch (error) {}
+  } catch (error: any) {
+    return {
+      status: error?.status,
+    };
+  }
+};
+const showBook = async (bookId: number) => {
+  try {
+    const response = await axiosInstance.get(`${BOOKS_URL}/${bookId}`);
+    const result = response?.data?.data;
+    console.log("result", result);
+
+    return {
+      data: result,
+      status: response?.status,
+    };
+  } catch (error: any) {
+    return {
+      status: error?.status,
+    };
+  }
 };
 const createBook = async (formData: any) => {
   try {
@@ -49,7 +69,19 @@ const createBook = async (formData: any) => {
     });
   }
 };
+const rateBook = async (idBook: number, param: { rating: number | null }) => {
+  console.log(param);
+  try {
+    const response = await axiosInstance.post(
+      `${BOOKS_URL}/${idBook}/rate`,
+      param
+    );
+    console.log(response);
+  } catch (error) {}
+};
 export const booksServices = {
   allBooks,
+  showBook,
   createBook,
+  rateBook,
 };
