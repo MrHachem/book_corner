@@ -20,11 +20,11 @@ const allBooks = async (booksState: string) => {
   console.log(BooksType_URL);
   try {
     const response = await axiosInstance.get(`${BooksType_URL}`);
-    console.log(response);
-    
+    const result = response?.data?.data;
+
     return {
-      data: response?.data,
-      status : response?.status
+      data: result,
+      status: response?.status,
     };
   } catch (error) {}
 };

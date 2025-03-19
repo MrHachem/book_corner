@@ -1,27 +1,27 @@
 import { AddBook, BookCardComponent } from "../../components";
-import { Box, Card, Grid, IconButton, Tooltip } from "@mui/material";
-import Button from "@mui/material/Button";
+import { Box, Grid, IconButton, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { booksServices } from "../../ services/books/booksServices";
-import { showNotifications } from "../../utils/notifications";
 import styles from "../../components/Book/Book-Card.module.css";
+import { useAuth } from "../../context/AuthContext";
 
 interface Book {
   id: number;
   title: string;
   author: string;
-  image: string;
-  bookCategory: string;
+  cover: string;
+  category: string;
+  is_favorite: boolean;
+  is_read: boolean;
 }
 export default function AllBooksPage() {
+  const { token } = useAuth();
   const [books, setBooks] = useState<Book[]>([]);
   const [error, setError] = useState("");
 
-  //const [booksState,setBooksState]=useState("books");
   const { booksState } = useParams();
-  console.log("BOOKS STATE FAV | UN READ | ALL", booksState || "books");
   const [openAddBook, setOpenAddBook] = useState(false);
   const userType = localStorage.getItem("userType");
 
@@ -30,10 +30,8 @@ export default function AllBooksPage() {
       setError("");
       const fetchData = async () => {
         const response = await booksServices.allBooks(booksState || "books");
-
-        console.log(response);
         if (response?.status === 200) {
-          setBooks(response.data);
+          setBooks(response?.data?.books);
         } else {
           setError(
             "There are no books or perhaps there was an error, please try again."
@@ -43,7 +41,7 @@ export default function AllBooksPage() {
 
       fetchData();
     } catch (error) {
-      console.log("uhhhhhhhhhhhhhhhhhhhhh");
+      console.log("error");
     }
   }, [booksState]);
 
@@ -55,7 +53,7 @@ export default function AllBooksPage() {
   };
   return (
     <Box className={"w-100"} sx={{ width: "100%", px: 1 }}>
-      {userType === "owner" && (
+      {token && (userType === "owner" || userType === "admin") && (
         <Box
           sx={{
             mt: 2,
@@ -65,17 +63,18 @@ export default function AllBooksPage() {
             alignItems: "center",
           }}
         >
-        
           <Tooltip title="Add new book">
             <IconButton
               onClick={handleClickOpen}
               color="inherit"
-              sx={{ color: "white", bgcolor: "#455f92",
-                ":hover" :{
-                  scale:"calc(1.3)",
-                  bgcolor:"#455f71"
-                }
-               }}
+              sx={{
+                color: "white",
+                bgcolor: "#455f92",
+                ":hover": {
+                  scale: "calc(1.3)",
+                  bgcolor: "#455f71",
+                },
+              }}
             >
               <AddIcon />
             </IconButton>
@@ -96,24 +95,29 @@ export default function AllBooksPage() {
           </div>
         </div>
       ) : (
-        <Grid container spacing={2} justifyContent={"end"}>
+        <Grid
+          container
+          rowSpacing={2}
+          columnSpacing={2}
+          justifyContent="start"
+          sx={{ padding: 2 }}
+        >
           {books.map((book) => (
             <Grid
               item
               xs={12}
               sm={6}
-              md={3}
+              md={6}
               lg={3}
-              sx={{
-                marginY: 3,
-              }}
+              display="flex"
+              justifyContent="space-between"
             >
               <BookCardComponent
                 name={book.title}
                 author={book.author}
-                bookCategory={book.bookCategory}
-                image={"/public/Atomic_Habits.jpg"}
-                bookId={book.id}
+                category={book.category}
+                cover={book.cover}
+                bookId={1}
               />
             </Grid>
           ))}

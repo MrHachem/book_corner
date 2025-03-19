@@ -63,7 +63,7 @@ export function ProfilePage(){
     const toggleEditMode = () => {
       setEditMode(!editMode);
     };
-  
+    const avatar = profile.gender === "male" ? "/public/male.gif":"/public/female.gif"
     return (
       <Box p={3}>
         <Grid container spacing={3}>
@@ -73,8 +73,8 @@ export function ProfilePage(){
                   <CardContent>
                     <Box display="flex" flexDirection="column" alignItems="center" sx={{margin: '33px'}}>
                       <Avatar
-                        sx={{ width: 100, height: 100, mb: 2 }}
-                        src="../../../public/user.png"
+                        sx={{ width: 200, height: 200, mb: 2 }}
+                        src={avatar}
                         alt="User Avatar"
                       />
                       {editMode?(
