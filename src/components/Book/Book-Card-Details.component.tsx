@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Box,
   Card,
@@ -18,6 +18,7 @@ import { BookOpenCheck } from "lucide-react";
 import { BookLock } from "lucide-react";
 import { booksServices } from "../../ services/books/booksServices";
 import { useAuth } from "../../context/AuthContext";
+import { showNotifications } from "../../utils/notifications";
 
 interface BookDetails {
   id: number;
@@ -37,20 +38,12 @@ export function BookCardDetails() {
   const navigate = useNavigate();
   const userType = localStorage.getItem("userType");
   const { bookId } = useParams();
-  const [book, setBook] = useState<BookDetails>({
-    id: 0,
-    title: "",
-    author: "",
-    category: "",
-    cover: "",
-    description: "",
-    published_at: "",
-    is_favorite: false,
-    is_read: false,
-    user_rating: 0,
-  });
+  const [book, setBook] = useState<BookDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [ratingValue, setRatingValue] = useState<number | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isUpdatingReading, setIsUpdatingReading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   //get book from bookId
   useEffect(() => {
@@ -62,7 +55,7 @@ export function BookCardDetails() {
           navigate("*");
         } else if (response?.status === 200) {
           setBook(data?.book);
-          setRatingValue(data?.book?.user_rating);
+          setRatingValue(data?.book?.user_rating ?? 0);
         }
       } catch (error) {
         navigate("*");
@@ -73,16 +66,102 @@ export function BookCardDetails() {
     fetchData();
   }, [bookId, navigate]);
 
-  //Edit the rateing
-  useEffect(() => {
-    const fetchData = async () => {
-      const param = {
-        rating: ratingValue,
-      };
-      await booksServices.rateBook(book.id, param);
-    };
-    fetchData();
-  }, [ratingValue]);
+  //update Rating
+  const updateRating = useCallback(
+    async (newValue: number) => {
+      console.log("book?.id", book?.id);
+      const prevRating = book?.user_rating ?? 0;
+      if (!book || newValue === ratingValue) return;
+      try {
+        console.log("book?.id", book?.id);
+        setRatingValue(newValue);
+        const response = await booksServices.rateBook(book?.id, {
+          rating: newValue,
+        });
+        if (response?.status !== 200) {
+          showNotifications(
+            "An error occurred while editing. Please try again.",
+            "warning"
+          );
+          setRatingValue(prevRating);
+        }
+      } catch (error) {
+        setBook((prev) => prev && { ...prev, user_rating: prevRating });
+      }
+    },
+    [book, ratingValue]
+  );
+
+  // update favorite state
+
+  const updateFavorite = useCallback(async () => {
+    if (!book || isUpdating) return;
+    const prevFav = book?.is_favorite;
+    const newFav = !prevFav;
+
+    setBook((prev) => prev && { ...prev, is_favorite: newFav });
+    setIsUpdating(true);
+    try {
+      const response = await booksServices.isFavBook(book?.id);
+      if (response?.status !== 200) {
+        showNotifications(
+          "An error occurred while editing. Please try again.",
+          "warning"
+        );
+        setBook((prev) => prev && { ...prev, is_favorite: prevFav });
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsUpdating(false);
+    }
+  }, [book, isUpdating]);
+
+  // update Read state
+
+  const updateRead = useCallback(async () => {
+    if (!book || isUpdatingReading) return;
+    const prevReadState = book?.is_read;
+    const newReadState = !prevReadState;
+
+    setBook((prev) => prev && { ...prev, is_read: newReadState });
+    setIsUpdatingReading(true);
+    try {
+      const response = await booksServices.isReadBook(book?.id);
+      if (response?.status !== 200) {
+        showNotifications(
+          "An error occurred while editing. Please try again.",
+          "warning"
+        );
+        setBook((prev) => prev && { ...prev, is_read: prevReadState });
+      }
+    } catch (error) {
+      console.error("error", error);
+    } finally {
+      setIsUpdatingReading(false);
+    }
+  }, [book, isUpdatingReading]);
+
+  //delete book
+  const deleteBook = useCallback(async () => {
+    if (!book || isDeleting) return;
+    setIsDeleting(true);
+    try {
+      const response = await booksServices.deleteBook(book?.id);
+      if (response?.status !== 200) {
+        showNotifications(
+          "An error occurred while editing. Please try again.",
+          "warning"
+        );
+      } else {
+        navigate(`/all-books`);
+      }
+    } catch (error) {
+      console.error("error", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  }, [book, isDeleting]);
 
   return loading ? (
     <div>Loading...</div>
@@ -118,7 +197,7 @@ export function BookCardDetails() {
                     maxWidth: 290,
                     height: 290,
                     backgroundColor: "white",
-                    backgroundImage: `url(${book.cover})`,
+                    backgroundImage: `url(${book?.cover})`,
                     backgroundSize: "contain",
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center",
@@ -135,18 +214,18 @@ export function BookCardDetails() {
                 {/* معلومات الكتاب */}
                 <Box sx={{ textAlign: "center", width: "100%" }}>
                   <Typography variant="h5" sx={{ color: "#203254" }}>
-                    {book.title}
+                    {book?.title}
                   </Typography>
                   <hr />
                   <Typography variant="h6" sx={{ color: "#203254" }}>
-                    {book.author}
+                    {book?.author}
                   </Typography>
                   <br />
                   <Rating
                     disabled={!token}
                     name="book_rating"
                     value={ratingValue}
-                    onChange={(event, newValue) => setRatingValue(newValue)}
+                    onChange={(_, newValue) => updateRating(newValue as number)}
                     precision={1}
                   />
                 </Box>
@@ -171,17 +250,17 @@ export function BookCardDetails() {
                 gutterBottom
                 sx={{ paddingY: 1, color: "#455f92" }}
               >
-                {book.title}
+                {book?.title}
               </Typography>
               <Typography variant="h6" gutterBottom>
-                Date of publication: {book.published_at}
+                Date of publication: {book?.published_at}
               </Typography>
               <Typography variant="h6" gutterBottom>
-                Type of book : {book.category}
+                Type of book : {book?.category}
               </Typography>
               <hr />
               <Typography variant="body1" gutterBottom sx={{ paddingY: 2 }}>
-                {book.description}
+                {book?.description}
               </Typography>
             </CardContent>
 
@@ -192,7 +271,7 @@ export function BookCardDetails() {
               {token && (userType === "admin" || userType === "owner") && (
                 <>
                   <Tooltip title="Delete Book">
-                    <IconButton aria-label="delete">
+                    <IconButton aria-label="delete" onClick={deleteBook}>
                       <DeleteIcon />
                     </IconButton>
                   </Tooltip>
@@ -204,10 +283,14 @@ export function BookCardDetails() {
                 </>
               )}
               <Tooltip title="Add to Favorites">
-                <IconButton aria-label="favorite" disabled={!token}>
+                <IconButton
+                  aria-label="favorite"
+                  disabled={!token || isUpdating}
+                  onClick={updateFavorite}
+                >
                   <Favorite
                     sx={{
-                      color: book.is_favorite
+                      color: book?.is_favorite
                         ? "#e61010d4"
                         : "rgb(0 0 0 / 54%)",
                     }}
@@ -215,10 +298,13 @@ export function BookCardDetails() {
                 </IconButton>
               </Tooltip>
               <Tooltip title="Read">
-                <IconButton disabled={!token}>
+                <IconButton
+                  disabled={!token || isUpdatingReading}
+                  onClick={updateRead}
+                >
                   <BookOpenCheck
                     style={{
-                      color: book.is_read ? "darkorange" : "rgb(0 0 0 / 54%)",
+                      color: book?.is_read ? "darkorange" : "rgb(0 0 0 / 54%)",
                     }}
                   />
                 </IconButton>

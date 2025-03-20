@@ -17,6 +17,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { Favorite } from "@mui/icons-material";
 import styles from "./Book-Card.module.css";
 import { BookOpenCheck } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 export function BookCardComponent({
   name,
@@ -24,18 +25,24 @@ export function BookCardComponent({
   category,
   cover,
   bookId,
+  IsFavorite,
+  IsRead,
 }: {
   name: string;
   author: string;
   category: string;
   cover?: string;
   bookId: number;
+  IsFavorite: boolean;
+  IsRead: boolean;
 }) {
   const userType = localStorage.getItem("userType");
+  const { token } = useAuth();
   const navigate = useNavigate();
   const handleNavigate = () => {
     navigate(`/all-books/book/${bookId}`);
   };
+  console.log(bookId);
   return (
     // @ts-ignore
     <Card sx={{ borderRadius: "10px" }} className={styles.bookCard}>
@@ -117,7 +124,7 @@ export function BookCardComponent({
             transition: "all 0.3s ease-in-out",
           }}
         >
-          {(userType === "admin"|| userType === "owner") && (
+          {token && (userType === "admin" || userType === "owner") && (
             <>
               <Tooltip title="Delete Book">
                 <IconButton aria-label="delete" onClick={handleNavigate}>
@@ -132,18 +139,29 @@ export function BookCardComponent({
             </>
           )}
           <Tooltip title="Book Details">
-            <IconButton aria-label="add" onClick={handleNavigate}>
+            <IconButton
+              aria-label="add"
+              onClick={handleNavigate}
+            >
               <ReadMoreIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Add to Favorites">
-            <IconButton aria-label="favorite">
-              <Favorite />
+            <IconButton aria-label="favorite" disabled={!token}>
+              <Favorite
+                sx={{
+                  color: IsFavorite ? "#e61010d4" : "rgb(0 0 0 / 54%)",
+                }}
+              />
             </IconButton>
           </Tooltip>
           <Tooltip title="Read">
-            <IconButton aria-label="read">
-              <BookOpenCheck />
+            <IconButton aria-label="read" disabled={!token}>
+              <BookOpenCheck
+                style={{
+                  color: IsRead ? "darkorange" : "rgb(0 0 0 / 54%)",
+                }}
+              />
             </IconButton>
           </Tooltip>
         </CardActions>

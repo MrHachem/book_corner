@@ -6,7 +6,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { booksServices } from "../../ services/books/booksServices";
 import styles from "../../components/Book/Book-Card.module.css";
 import { useAuth } from "../../context/AuthContext";
-import { showNotifications } from "../../utils/notifications";
 
 interface Book {
   id: number;
@@ -21,7 +20,7 @@ export default function AllBooksPage() {
   const { token } = useAuth();
   const [books, setBooks] = useState<Book[]>([]);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const { booksState } = useParams();
   const [openAddBook, setOpenAddBook] = useState(false);
@@ -35,7 +34,8 @@ export default function AllBooksPage() {
         if (response?.status === 200) {
           setBooks(response?.data?.books);
         } else if (response?.status === 404) {
-          navigate("*");
+          setBooks([])
+         
         } else {
           setError(
             "There are no books or perhaps there was an error, please try again."
@@ -121,7 +121,9 @@ export default function AllBooksPage() {
                 author={book.author}
                 category={book.category}
                 cover={book.cover}
-                bookId={1}
+                bookId={book.id}
+                IsFavorite ={book.is_favorite}
+                IsRead ={book.is_read}
               />
             </Grid>
           ))}

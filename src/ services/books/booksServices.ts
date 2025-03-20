@@ -1,17 +1,8 @@
-import { Dayjs } from "dayjs";
 import axiosInstance from "../axiosInstance";
 import { showNotifications } from "../../utils/notifications";
 
 const BOOKS_URL = "/api/books";
 const CREATE_BOOK_URL = "/api/books/new";
-
-interface BookForm {
-  title?: string;
-  author?: string;
-  category?: string;
-  pdf?: any;
-  cover?: any;
-}
 
 const allBooks = async (booksState: string) => {
   const BooksType_URL =
@@ -36,7 +27,6 @@ const showBook = async (bookId: number) => {
   try {
     const response = await axiosInstance.get(`${BOOKS_URL}/${bookId}`);
     const result = response?.data?.data;
-    console.log("result", result);
 
     return {
       data: result,
@@ -69,19 +59,71 @@ const createBook = async (formData: any) => {
     });
   }
 };
+const deleteBook = async (idBook: number) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${BOOKS_URL}/${idBook}/delete`
+    );
+    return {
+      status: response.status,
+    };
+  } catch (error: any) {
+    return {
+      status: error?.status,
+    };
+  }
+};
+
 const rateBook = async (idBook: number, param: { rating: number | null }) => {
-  console.log(param);
   try {
     const response = await axiosInstance.post(
       `${BOOKS_URL}/${idBook}/rate`,
       param
     );
-    console.log(response);
-  } catch (error) {}
+    return {
+      status: response.status,
+    };
+  } catch (error: any) {
+    return {
+      status: error?.status,
+    };
+  }
 };
+const isFavBook = async (idBook: number) => {
+  try {
+    const response = await axiosInstance.post(
+      `${BOOKS_URL}/${idBook}/favorite`
+    );
+    return {
+      status: response.status,
+    };
+  } catch (error: any) {
+    return {
+      status: error?.status,
+    };
+  }
+};
+
+const isReadBook = async (idBook: number) => {
+  try {
+    const response = await axiosInstance.post(`${BOOKS_URL}/${idBook}/read`);
+    console.log(response);
+    return {
+      status: response.status,
+    };
+  } catch (error: any) {
+    return {
+      status: error?.status,
+    };
+  }
+};
+
 export const booksServices = {
   allBooks,
   showBook,
   createBook,
+  deleteBook,
+  isFavBook,
   rateBook,
+  isReadBook,
 };
