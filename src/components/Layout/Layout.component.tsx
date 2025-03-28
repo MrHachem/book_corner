@@ -135,15 +135,6 @@ export function Layout() {
       icon: <AutoStoriesOutlinedIcon sx={{ color: "#455769" }} />,
     },
   ];
-
-  // إضافة خيار "حسابات المستخدمين" فقط إذا كان المستخدم admin أو owner
-  if (userType === "admin" || userType === "owner") {
-    menuItems.push({
-      text: "users accounts ",
-      link: "/users-accounts",
-      icon: <FaceIcon sx={{ color: "#455769" }} />,
-    });
-  }
   if(token){
     menuItems.push( {
       text: "MY READ BOOKS",
@@ -162,6 +153,14 @@ export function Layout() {
       icon: <Star style={{ color: "#455769" }} />,
     },)
   }
+    // إضافة خيار "حسابات المستخدمين" فقط إذا كان المستخدم admin أو owner
+    if (token &&(userType === "admin" || userType === "owner")) {
+      menuItems.push({
+        text: "users accounts ",
+        link: "/users-accounts",
+        icon: <FaceIcon sx={{ color: "#455769" }} />,
+      });
+    }
 
   return (
     <SidebarContext.Provider value={{ open, setOpen }}>

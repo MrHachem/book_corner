@@ -18,6 +18,8 @@ import { Favorite } from "@mui/icons-material";
 import styles from "./Book-Card.module.css";
 import { BookOpenCheck } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { useState } from "react";
+import EditBook from "./CRUD_book/Edit-Book-component";
 
 export function BookCardComponent({
   name,
@@ -27,6 +29,7 @@ export function BookCardComponent({
   bookId,
   IsFavorite,
   IsRead,
+  Update,
 }: {
   name: string;
   author: string;
@@ -35,137 +38,153 @@ export function BookCardComponent({
   bookId: number;
   IsFavorite: boolean;
   IsRead: boolean;
+  Update: () => Promise<void>;
 }) {
+  const [openEditBook, setOpenEditBook] = useState(false);
   const userType = localStorage.getItem("userType");
   const { token } = useAuth();
   const navigate = useNavigate();
   const handleNavigate = () => {
     navigate(`/all-books/book/${bookId}`);
   };
-  console.log(bookId);
-  return (
-    // @ts-ignore
-    <Card sx={{ borderRadius: "10px" }} className={styles.bookCard}>
-      {/* صورة الكتاب */}
-      <CardMedia
-        className={styles.hoverImage}
-        component="img"
-        image={cover}
-        alt="Book Image"
-      />
+  const handleOpenEdit = () => {
+    setOpenEditBook(true);
+  };
+  const handleCloseEdit = () => {
+    setOpenEditBook(false);
 
-      <Box className={styles.hoverBox}>
-        <CardHeader
-          sx={{
-            background: "rgba(255, 255, 255, 0.8)",
-            padding: "10px",
-            transition: "all 0.3s ease-in-out",
-          }}
-          avatar={
-            <Avatar
-              sx={{
-                bgcolor: "#4b7fb2",
-                width: 56,
-                height: 56,
-              }}
-              aria-label="recipe"
-            >
-              <img
-                src="/public/fav_icon.png"
-                alt="Avatar"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  borderRadius: "50%",
-                }}
-              />
-            </Avatar>
-          }
-          title={
-            <Typography
-              variant="h6"
-              sx={{ fontFamily: "Cairo, sans-serif", fontSize: "20px" }}
-            >
-              {name}
-            </Typography>
-          }
+  };
+
+  return (
+    //@ts-ignore
+    <>
+      <Card sx={{ borderRadius: "10px" }} className={styles.bookCard}>
+        {/* صورة الكتاب */}
+        <CardMedia
+          className={styles.hoverImage}
+          component="img"
+          image={cover}
+          alt="Book Image"
         />
 
-        <CardContent
-          sx={{
-            background: "rgba(255, 255, 255, 0.8)",
-            paddingLeft: "20px",
-            transition: "all 0.3s ease-in-out",
-          }}
-        >
-          <Typography
-            variant="body1"
-            color="text.primary"
-            sx={{ fontFamily: "Cairo, sans-serif" }}
-          >
-            author : {author}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="text.primary"
-            sx={{ fontFamily: "Cairo, sans-serif" }}
-          >
-            type : {category}
-          </Typography>
-        </CardContent>
-
-        <CardActions
-          sx={{
-            background: "rgba(255, 255, 255, 0.8)",
-            padding: "10px",
-            display: "flex",
-            justifyContent: "center",
-            transition: "all 0.3s ease-in-out",
-          }}
-        >
-          {token && (userType === "admin" || userType === "owner") && (
-            <>
-              <Tooltip title="Delete Book">
-                <IconButton aria-label="delete" onClick={handleNavigate}>
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Edit Book">
-                <IconButton aria-label="edit" onClick={handleNavigate}>
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-            </>
-          )}
-          <Tooltip title="Book Details">
-            <IconButton
-              aria-label="add"
-              onClick={handleNavigate}
-            >
-              <ReadMoreIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Add to Favorites">
-            <IconButton aria-label="favorite" disabled={!token}>
-              <Favorite
+        <Box className={styles.hoverBox}>
+          <CardHeader
+            sx={{
+              background: "rgba(255, 255, 255, 0.8)",
+              padding: "10px",
+              transition: "all 0.3s ease-in-out",
+            }}
+            avatar={
+              <Avatar
                 sx={{
-                  color: IsFavorite ? "#e61010d4" : "rgb(0 0 0 / 54%)",
+                  bgcolor: "#4b7fb2",
+                  width: 56,
+                  height: 56,
                 }}
-              />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Read">
-            <IconButton aria-label="read" disabled={!token}>
-              <BookOpenCheck
-                style={{
-                  color: IsRead ? "darkorange" : "rgb(0 0 0 / 54%)",
-                }}
-              />
-            </IconButton>
-          </Tooltip>
-        </CardActions>
-      </Box>
-    </Card>
+                aria-label="recipe"
+              >
+                <img
+                  src="/public/fav_icon.png"
+                  alt="Avatar"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                  }}
+                />
+              </Avatar>
+            }
+            title={
+              <Typography
+                variant="h6"
+                sx={{ fontFamily: "Cairo, sans-serif", fontSize: "20px" }}
+              >
+                {name}
+              </Typography>
+            }
+          />
+
+          <CardContent
+            sx={{
+              background: "rgba(255, 255, 255, 0.8)",
+              paddingLeft: "20px",
+              transition: "all 0.3s ease-in-out",
+            }}
+          >
+            <Typography
+              variant="body1"
+              color="text.primary"
+              sx={{ fontFamily: "Cairo, sans-serif" }}
+            >
+              author : {author}
+            </Typography>
+            <Typography
+              variant="body1"
+              color="text.primary"
+              sx={{ fontFamily: "Cairo, sans-serif" }}
+            >
+              type : {category}
+            </Typography>
+          </CardContent>
+
+          <CardActions
+            sx={{
+              background: "rgba(255, 255, 255, 0.8)",
+              padding: "10px",
+              display: "flex",
+              justifyContent: "center",
+              transition: "all 0.3s ease-in-out",
+            }}
+          >
+            {token && (userType === "admin" || userType === "owner") && (
+              <>
+                <Tooltip title="Delete Book">
+                  <IconButton aria-label="delete" onClick={handleNavigate}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Edit Book">
+                  <IconButton aria-label="edit" onClick={handleOpenEdit}>
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+              </>
+            )}
+            <Tooltip title="Book Details">
+              <IconButton aria-label="add" onClick={handleNavigate}>
+                <ReadMoreIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Add to Favorites">
+              <IconButton aria-label="favorite" disabled={!token}>
+                <Favorite
+                  sx={{
+                    color: IsFavorite ? "#e61010d4" : "rgb(0 0 0 / 54%)",
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Read">
+              <IconButton aria-label="read" disabled={!token}>
+                <BookOpenCheck
+                  style={{
+                    color: IsRead ? "darkorange" : "rgb(0 0 0 / 54%)",
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
+          </CardActions>
+        </Box>
+      </Card>
+      {openEditBook && (
+        <EditBook
+          open={openEditBook}
+          onClose={handleCloseEdit}
+          bookId={bookId}
+          onUpdate={Update}
+        />
+      )}
+    </>
   );
 }

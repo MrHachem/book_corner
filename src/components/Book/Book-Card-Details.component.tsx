@@ -46,25 +46,46 @@ export function BookCardDetails() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   //get book from bookId
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await booksServices.showBook(Number(bookId));
-        const data = response?.data;
-        if (response?.status === 404) {
-          navigate("*");
-        } else if (response?.status === 200) {
-          setBook(data?.book);
-          setRatingValue(data?.book?.user_rating ?? 0);
-        }
-      } catch (error) {
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await booksServices.showBook(Number(bookId));
+  //       const data = response?.data;
+  //       if (response?.status === 404) {
+  //         navigate("*");
+  //       } else if (response?.status === 200) {
+  //         setBook(data?.book);
+  //         setRatingValue(data?.book?.user_rating ?? 0);
+  //       }
+  //     } catch (error) {
+  //       navigate("*");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [bookId, navigate]);
+
+  const getBook = useCallback(async () => {
+    try {
+      const response = await booksServices.showBook(Number(bookId));
+      const data = response?.data;
+      if (response?.status === 404) {
         navigate("*");
-      } finally {
-        setLoading(false);
+      } else if (response?.status === 200) {
+        setBook(data?.book);
+        setRatingValue(data?.book?.user_rating ?? 0);
       }
-    };
-    fetchData();
+    } catch (error) {
+      navigate("*");
+    } finally {
+      setLoading(false);
+    }
   }, [bookId, navigate]);
+
+  useEffect(() => {
+    getBook();
+  }, [getBook]);
 
   //update Rating
   const updateRating = useCallback(

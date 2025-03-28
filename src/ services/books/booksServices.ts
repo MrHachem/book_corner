@@ -12,6 +12,7 @@ const allBooks = async (booksState: string) => {
   try {
     const response = await axiosInstance.get(`${BooksType_URL}`);
     const result = response?.data?.data;
+    console.log(response?.data?.data);
 
     return {
       data: result,
@@ -20,6 +21,7 @@ const allBooks = async (booksState: string) => {
   } catch (error: any) {
     return {
       status: error?.status,
+      error: error?.response,
     };
   }
 };
@@ -45,6 +47,29 @@ const createBook = async (formData: any) => {
         "Content-Type": "multipart/form-data",
       },
     });
+    console.log(response);
+    return {
+      status: response.status,
+    };
+  } catch (error: any) {
+    const errorDetails = error?.response?.data?.errors;
+    // // لعرض كل الأخطاء الموجودة ضمن كائن (error)
+    Object.values(errorDetails).forEach((messages: any) => {
+      if (Array.isArray(messages)) {
+        messages.forEach((msg) => showNotifications(msg, "error"));
+      }
+    });
+  }
+};
+const updateBook = async (
+  bookId: number,
+  formData: any
+) => {
+  try {
+    const response = await axiosInstance.patch(
+      `${BOOKS_URL}/${bookId}/edit`,
+      formData
+    );
     console.log(response);
     return {
       status: response.status,
@@ -123,6 +148,7 @@ export const booksServices = {
   showBook,
   createBook,
   deleteBook,
+  updateBook,
   isFavBook,
   rateBook,
   isReadBook,

@@ -20,11 +20,11 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { authorsServices } from "../../../ services/authors/authorsServices";
 import { categoriesServices } from "../../../ services/categories/categoriesServices";
 import { booksServices } from "../../../ services/books/booksServices";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 
 interface OpenState {
   open: boolean;
-  onClose: any;
+  onClose: () => void;
 }
 interface Book {
   title?: string;
@@ -284,7 +284,7 @@ export function AddBook(props: OpenState) {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DatePicker"]}>
               <DatePicker
-                sx={{width:'100%'}}
+                sx={{ width: "100%" }}
                 label="published At"
                 name="published_at"
                 value={publishedAt}
@@ -302,7 +302,6 @@ export function AddBook(props: OpenState) {
               marginBottom: "10px",
             }}
           >
-            
             <FormControl fullWidth>
               <InputLabel id="selecte-author-label">selecte author</InputLabel>
               <Select
@@ -312,11 +311,11 @@ export function AddBook(props: OpenState) {
                 label="selecte author"
                 onChange={handleSelectionAuthors}
               >
-               {authors.map((author) => (
-                <MenuItem key={author.id} value={author.id}>
-                  {author.name}
-                </MenuItem>
-              ))}
+                {authors.map((author) => (
+                  <MenuItem key={author.id} value={author.id}>
+                    {author.name}
+                  </MenuItem>
+                ))}
                 <MenuItem value="other">Other</MenuItem>
               </Select>
             </FormControl>
@@ -340,7 +339,9 @@ export function AddBook(props: OpenState) {
             }}
           >
             <FormControl fullWidth>
-              <InputLabel id="selecte-category-label">selecte category</InputLabel>
+              <InputLabel id="selecte-category-label">
+                selecte category
+              </InputLabel>
               <Select
                 labelId="selecte-category-label"
                 id="selecte-category"
@@ -348,11 +349,11 @@ export function AddBook(props: OpenState) {
                 label="selecte category"
                 onChange={handleSelectionCategory}
               >
-                 {categories.map((category) => (
-                <MenuItem key={category.id} value={category.id}>
-                  {category.name}
-                </MenuItem>
-              ))}
+                {categories.map((category) => (
+                  <MenuItem key={category.id} value={category.id}>
+                    {category.name}
+                  </MenuItem>
+                ))}
                 <MenuItem value="other">Other</MenuItem>
               </Select>
             </FormControl>
