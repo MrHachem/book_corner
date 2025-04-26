@@ -11,9 +11,11 @@ import {
   Typography,
   Zoom,
 } from "@mui/material";
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Bot } from 'lucide-react';
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { Bot } from "lucide-react";
 import { Close } from "@mui/icons-material";
+import { chatServices } from "../../ services/chat/chatServices";
+import { string } from "yup";
 
 interface MessageProps {
   isUser: boolean;
@@ -28,7 +30,7 @@ const ChatButton = styled(Button)(({ theme }) => ({
   width: "60px",
   height: "60px",
   minWidth: "unset",
-  backgroundColor: 'rgb(141 183 216)',
+  backgroundColor: "rgb(141 183 216)",
   color: "#fff",
   "&:hover": {
     transform: "scale(1.1)",
@@ -82,13 +84,14 @@ const MessageContent = styled(Paper)<MessageProps>(({ isUser }) => ({
 }));
 
 interface ChatMessage {
-  text: string;
+  text: string | [];
   isUser: boolean;
 }
 
 const ChatWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [chatMessages, setChatMessages] = useState([]);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { text: "Hello! How can I help you today?", isUser: false },
   ]);
@@ -102,20 +105,32 @@ const ChatWidget: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (message.trim()) {
       setMessages([...messages, { text: message, isUser: true }]);
-      setMessage("");
-      // Simulate response after 1 second
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          { text: "Thanks for your message! I'll get back to you soon.", isUser: false },
-        ]);
-      }, 1000);
+      console.log(typeof message);
+      try {
+        const response = await chatServices.ChatRecommendation({
+          topic: message,
+        });
+        if (response.status === 200) {
+          let books = [];
+          books = response?.data?.books;
+          let str = `Suggested Books:\n\n`;
+    
+          books.forEach((book: string) => {
+            str += book +"/"+ '\n';
+          });
+
+          setMessages((prev) => [...prev, { text: str, isUser: false }]);
+        }
+      } catch (error: any) {
+        // Handle error
+      } finally {
+        setMessage("");
+      }
     }
   };
-
   const handleKeyDown = (e: React.KeyboardEvent<any>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -125,11 +140,8 @@ const ChatWidget: React.FC = () => {
 
   return (
     <>
-      <ChatButton
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Open chat"
-      >
-        <Bot size={40}/>
+      <ChatButton onClick={() => setIsOpen(!isOpen)} aria-label="Open chat">
+        <Bot size={40} />
       </ChatButton>
 
       <Zoom in={isOpen}>
@@ -165,15 +177,15 @@ const ChatWidget: React.FC = () => {
           </MessageList>
 
           <MessageInput>
-          <TextField
-            fullWidth
-            multiline
-            maxRows={4}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown} 
-            placeholder="Type your message..."
-            size="small"
+            <TextField
+              fullWidth
+              multiline
+              maxRows={4}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type your message..."
+              size="small"
             />
             <IconButton
               color="primary"

@@ -27,6 +27,7 @@ export default function AllBooksPage() {
   const userType = localStorage.getItem("userType");
 
   const getBooks = useCallback(async () => {
+    setError("")
     try {
       const response = await booksServices.allBooks(booksState || "books");
       if (response?.status === 200) {
@@ -41,7 +42,9 @@ export default function AllBooksPage() {
           case "readBooks":
             setBooks(response?.data?.read_books);
             break;
-          //unReadBooks
+          case "unReadBooks":
+            setBooks(response?.data?.read_books);
+            break;
         }
       } else if (response?.status === 404) {
         console.log(response?.error?.data?.message);

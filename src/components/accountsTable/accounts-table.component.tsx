@@ -66,7 +66,7 @@ export default function UsersAccountTable() {
     const getUsers = async () => {
       const response = await usersServices.getUsers();
       if (response?.status === 200) {
-        setUsers(response?.data?.data);
+        setUsers(response?.data?.data?.users);
       }
     };
     getUsers();
