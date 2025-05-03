@@ -1,11 +1,12 @@
 import { AddBook, BookCardComponent } from "../../components";
-import { Box, Grid, IconButton, Tooltip } from "@mui/material";
+import { Box, Grid, IconButton, Pagination, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { booksServices } from "../../ services/books/booksServices";
 import styles from "../../components/Book/Book-Card.module.css";
 import { useAuth } from "../../context/AuthContext";
+import { GridLoadingOverlay } from "@mui/x-data-grid";
 
 interface Book {
   id: number;
@@ -16,52 +17,71 @@ interface Book {
   is_favorite: boolean;
   is_read: boolean;
 }
+
 export default function AllBooksPage() {
   const { token } = useAuth();
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    last_page: 1,
+    total: 2,
+    per_page: 1,
+  });
+  const [currentPage, setCurrentPage] = useState(1);
   const [books, setBooks] = useState<Book[]>([]);
   const [error, setError] = useState("");
+  const [lodaing, setLodaing] = useState(false);
   const navigate = useNavigate();
 
   const { booksState } = useParams();
   const [openAddBook, setOpenAddBook] = useState(false);
   const userType = localStorage.getItem("userType");
 
-  const getBooks = useCallback(async () => {
-    setError("")
-    try {
-      const response = await booksServices.allBooks(booksState || "books");
-      if (response?.status === 200) {
-        console.log(response?.data?.books);
-        switch (booksState ?? "books") {
-          case "books":
-            setBooks(response?.data?.books);
-            break;
-          case "favoriteBooks":
-            setBooks(response?.data?.favorite_books);
-            break;
-          case "readBooks":
-            setBooks(response?.data?.read_books);
-            break;
-          case "unReadBooks":
-            setBooks(response?.data?.read_books);
-            break;
+  const getBooks = useCallback(
+    async (page = 1) => {
+      setError("");
+      setLodaing(true);
+      try {
+        const response = await booksServices.allBooks(
+          booksState || "books",
+          page
+        );
+        if (response?.status === 200) {
+          setLodaing(false);
+          console.log(response?.data?.books);
+          switch (booksState ?? "books") {
+            case "books":
+              setBooks(response?.data?.books);
+              break;
+            case "favoriteBooks":
+              setBooks(response?.data?.favorite_books);
+              break;
+            case "readBooks":
+              setBooks(response?.data?.read_books);
+              break;
+            case "unReadBooks":
+              setBooks(response?.data?.read_books);
+              break;
+          }
+          setPagination(response?.data?.pagination);
+        } else if (response?.status === 404) {
+          console.log(response?.error?.data?.message);
+          response?.error?.data?.message === "لا يوجد كتب"
+            ? setError("There are no books ")
+            : navigate("*");
+        } else {
+          setError("perhaps there was an error, please try again.");
         }
-      } else if (response?.status === 404) {
-        console.log(response?.error?.data?.message);
-        response?.error?.data?.message === "لا يوجد كتب"
-          ? setError("There are no books ")
-          : navigate("*");
-      } else {
-        setError("perhaps there was an error, please try again.");
+      } catch (error) {
+        console.log("error");
+        setLodaing(false);
       }
-    } catch (error) {
-      console.log("error");
-    }
-  }, [booksState]);
+    },
+    [booksState]
+  );
 
   useEffect(() => {
-    getBooks();
-  }, [getBooks]);
+    getBooks(currentPage);
+  }, [getBooks, currentPage]);
 
   const handleClickOpen = () => {
     setOpenAddBook(true);
@@ -100,8 +120,7 @@ export default function AllBooksPage() {
           </Tooltip>
         </Box>
       )}
-
-      {error ? (
+      {lodaing ? <><p style={{color:"blue",fontSize:"30px"}}>lodaing..</p></> : <>   {error ? (
         <div className={styles.error}>
           <div className={styles.errorCard}>
             <img
@@ -144,8 +163,22 @@ export default function AllBooksPage() {
             </Grid>
           ))}
         </Grid>
+      )}</>}
+   
+      <Pagination
+        count={pagination.last_page}
+        page={currentPage}
+        onChange={(event, value: number) => setCurrentPage(value)}
+        color="primary"
+        sx={{ mt: 4, display: "flex", justifyContent: "center" }}
+      />
+      {openAddBook && (
+        <AddBook
+          open={openAddBook}
+          onClose={handleCloseOpen}
+          onUpdate={getBooks}
+        />
       )}
-      {openAddBook && <AddBook open={openAddBook} onClose={handleCloseOpen} />}
     </Box>
   );
 }

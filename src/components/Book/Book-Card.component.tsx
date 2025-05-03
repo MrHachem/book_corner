@@ -18,8 +18,10 @@ import { Favorite } from "@mui/icons-material";
 import styles from "./Book-Card.module.css";
 import { BookOpenCheck } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import EditBook from "./CRUD_book/Edit-Book-component";
+import { booksServices } from "../../ services/books/booksServices";
+import { showNotifications } from "../../utils/notifications";
 
 export function BookCardComponent({
   name,
@@ -40,6 +42,12 @@ export function BookCardComponent({
   IsRead: boolean;
   Update: () => Promise<void>;
 }) {
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isFavoriteState, setIsFavoriteState] = useState(IsFavorite);
+  const [isUpdatingRead, setIsUpdatingRead] = useState(false);
+  const [isReadState, setIsReadState] = useState(IsRead);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const [openEditBook, setOpenEditBook] = useState(false);
   const userType = localStorage.getItem("userType");
   const { token } = useAuth();
@@ -52,8 +60,72 @@ export function BookCardComponent({
   };
   const handleCloseEdit = () => {
     setOpenEditBook(false);
-
   };
+   //delete book
+    const handleDeleteBook = useCallback(async () => {
+      if (!bookId || isDeleting) return;
+      setIsDeleting(true);
+      try {
+        const response = await booksServices.deleteBook(bookId);
+        if (response?.status !== 200) {
+          showNotifications(
+            "An error occurred while editing. Please try again.",
+            "warning"
+          );
+        } else {
+          Update();
+          navigate(`/all-books`);
+        }
+      } catch (error) {
+        console.error("error", error);
+      } finally {
+        setIsDeleting(false);
+      }
+    }, [bookId, isDeleting]);
+
+  const updateFavorite = useCallback(async () => {
+    console.log(IsFavorite);
+    if (!bookId || isUpdating) return;
+    setIsFavoriteState((prev) => !prev);
+
+    setIsUpdating(true);
+    try {
+      const response = await booksServices.isFavBook(bookId);
+      if (response?.status !== 200) {
+        showNotifications(
+          "An error occurred while editing. Please try again.",
+          "warning"
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsUpdating(false);
+    }
+  }, [bookId, isUpdating]);
+
+  // update Read state
+
+  const updateRead = useCallback(async () => {
+    console.log(IsRead);
+    if (!bookId || isUpdatingRead) return;
+    setIsReadState((prev) => !prev);
+
+    setIsUpdatingRead(true);
+    try {
+      const response = await booksServices.isReadBook(bookId);
+      if (response?.status !== 200) {
+        showNotifications(
+          "An error occurred while editing. Please try again.",
+          "warning"
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsUpdatingRead(false);
+    }
+  }, [bookId, isUpdatingRead]);
 
   return (
     //@ts-ignore
@@ -140,10 +212,10 @@ export function BookCardComponent({
             {token && (userType === "admin" || userType === "owner") && (
               <>
                 <Tooltip title="Delete Book">
-                  <IconButton aria-label="delete" onClick={handleNavigate}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
+                    <IconButton aria-label="delete" disabled={!token || isDeleting} onClick={handleDeleteBook}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
                 <Tooltip title="Edit Book">
                   <IconButton aria-label="edit" onClick={handleOpenEdit}>
                     <EditIcon />
@@ -151,25 +223,35 @@ export function BookCardComponent({
                 </Tooltip>
               </>
             )}
+            
             <Tooltip title="Book Details">
               <IconButton aria-label="add" onClick={handleNavigate}>
                 <ReadMoreIcon />
               </IconButton>
             </Tooltip>
             <Tooltip title="Add to Favorites">
-              <IconButton aria-label="favorite" disabled={!token}>
+              <IconButton
+                aria-label="favorite"
+                disabled={!token || isUpdating}
+                onClick={updateFavorite}
+              >
                 <Favorite
                   sx={{
-                    color: IsFavorite ? "#e61010d4" : "rgb(0 0 0 / 54%)",
+                    color: isFavoriteState ? "#e61010d4" : "rgb(0 0 0 / 54%)",
                   }}
                 />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Read">
-              <IconButton aria-label="read" disabled={!token}>
+            
+            <Tooltip title="Add to Read">
+              <IconButton
+                aria-label="Read"
+                disabled={!token || isUpdatingRead}
+                onClick={updateRead}
+              >
                 <BookOpenCheck
                   style={{
-                    color: IsRead ? "darkorange" : "rgb(0 0 0 / 54%)",
+                    color: isReadState ? "darkorange" : "rgb(0 0 0 / 54%)",
                   }}
                 />
               </IconButton>

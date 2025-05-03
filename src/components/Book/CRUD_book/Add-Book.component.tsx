@@ -25,6 +25,8 @@ import Select from "@mui/material/Select";
 interface OpenState {
   open: boolean;
   onClose: () => void;
+  onUpdate:() => Promise<void>
+
 }
 interface Book {
   title?: string;
@@ -39,6 +41,7 @@ interface Categories {
   name: string;
 }
 export function AddBook(props: OpenState) {
+  const[display,setDisplay]=useState(false);
   const [openDialog, setOpenDialog] = useState<boolean>(props.open);
   const [authors, setAuthors] = useState<Authors[]>([]);
   const [errorAuthor, setErrorAuthor] = useState("");
@@ -217,9 +220,11 @@ export function AddBook(props: OpenState) {
     );
 
     try {
+      setDisplay(true);
       const response = await booksServices.createBook(formData);
       if (response?.status === 200) {
         showNotifications("The Book has been added successfully", "success");
+        props.onUpdate();
       }
     } catch (error) {
       console.log(error);
@@ -233,6 +238,9 @@ export function AddBook(props: OpenState) {
       setIsCustomCategory(false);
       setCustomCategory("");
       setSelectedCategory("");
+      setDisplay(false);
+      props.onUpdate();
+
     }
   };
 
@@ -417,7 +425,7 @@ export function AddBook(props: OpenState) {
         </Box>
         <DialogActions>
           <Button onClick={props.onClose}>cancle</Button>
-          <Button onClick={handleSubmit}>ADD</Button>
+          <Button onClick={handleSubmit} disabled={display}>ADD</Button>
         </DialogActions>
       </Dialog>
     </>

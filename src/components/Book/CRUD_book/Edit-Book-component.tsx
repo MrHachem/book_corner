@@ -95,12 +95,12 @@ export default function EditBook(props: OpenState) {
         const response = await booksServices.updateBook(props.bookId,data);
         if(response?.status === 200){
           console.log("✅ تم تعديل الكتاب بنجاح");
-          props.onUpdate(); // ✅ تحديث قائمة الكتب
+          props.onUpdate(); // تحديث قائمة الكتب
           props.onClose(); 
         }
       } catch (error) {
         setLoading(false);
-        props.onUpdate(); // ✅ تحديث قائمة الكتب
+        props.onUpdate(); //  تحديث قائمة الكتب
         props.onClose(); 
       } finally {
         setLoading(false);

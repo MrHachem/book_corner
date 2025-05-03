@@ -4,9 +4,9 @@ import { showNotifications } from "../../utils/notifications";
 const BOOKS_URL = "/api/books";
 const CREATE_BOOK_URL = "/api/books/new";
 
-const allBooks = async (booksState: string) => {
+const allBooks = async (booksState: string,currentPage:number) => {
   const BooksType_URL =
-    booksState === "books" ? BOOKS_URL : `${BOOKS_URL}/${booksState}`;
+    booksState === "books" ? BOOKS_URL : `${BOOKS_URL}/${booksState}?page=${currentPage}`;
 
   console.log(BooksType_URL);
   try {
