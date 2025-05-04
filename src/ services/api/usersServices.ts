@@ -4,7 +4,6 @@ import axiosInstance from "../axiosInstance";
 const USERS_URL = "api/users";
 const TOGGLESTATUS = "/api/users/toggleAccountActiveStatus/";
 
-
 const getUsers = async () => {
   try {
     const response = await axiosInstance.get(`${USERS_URL}`);
@@ -19,6 +18,20 @@ const getUsers = async () => {
     const errorDetails = error?.response?.data?.message || {};
     console.log(error);
     showNotifications(errorDetails, "error");
+  }
+};
+const getUser = async (userId: number) => {
+  try {
+    const response = await axiosInstance.get(`${USERS_URL}/${userId}`);
+    const result = response?.data?.data;
+
+    return {
+      data: result,
+      status: response?.status,
+    };
+  } catch (error: any) {
+    const errorDetails = error?.response?.data?.message || {};
+    console.log(errorDetails);
   }
 };
 
@@ -38,11 +51,11 @@ const toggleAccountActiveStatus = async (id: number) => {
     showNotifications(errorDetails, "error");
   }
 };
-const changeRole = async (id: number,userPassword:string) => {
- 
+const changeRole = async (id: number, userPassword: string) => {
   try {
-
-    const response = await axiosInstance.post(`${USERS_URL}/${id}/changeType`,{password:userPassword});
+    const response = await axiosInstance.post(`${USERS_URL}/${id}/changeType`, {
+      password: userPassword,
+    });
     const result = response?.data;
     console.log("result.data", result?.data);
 
@@ -72,7 +85,8 @@ const deleteUser = async (idUser: number) => {
 };
 export const usersServices = {
   getUsers,
+  getUser,
   toggleAccountActiveStatus,
   changeRole,
-  deleteUser
+  deleteUser,
 };

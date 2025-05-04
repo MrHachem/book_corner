@@ -12,10 +12,10 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
+import FileDownloadRoundedIcon from "@mui/icons-material/FileDownloadRounded";
 import Tooltip from "@mui/material/Tooltip";
 import { Favorite } from "@mui/icons-material";
 import { BookOpenCheck } from "lucide-react";
-import { BookLock } from "lucide-react";
 import { booksServices } from "../../ services/books/booksServices";
 import { useAuth } from "../../context/AuthContext";
 import { showNotifications } from "../../utils/notifications";
@@ -30,6 +30,7 @@ interface BookDetails {
   published_at: string;
   is_favorite: boolean;
   is_read: boolean;
+  is_downloaded: boolean;
   user_rating: number;
 }
 
@@ -44,6 +45,7 @@ export function BookCardDetails() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isUpdatingReading, setIsUpdatingReading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const getBook = useCallback(async () => {
     try {
@@ -65,6 +67,33 @@ export function BookCardDetails() {
   useEffect(() => {
     getBook();
   }, [getBook]);
+
+  //download book
+  const download = useCallback(async () => {
+    if (!book || isDownloading) return;
+    const prevDown = book?.is_downloaded;
+    const newDown = !prevDown;
+
+    setBook((prev) => prev && { ...prev, is_downloaded: newDown });
+    setIsDownloading(true);
+    try {
+      const response = await booksServices.downloadBook(book?.id);
+      console.log(response);
+      if (response?.status !== 200) {
+        showNotifications(
+          "An error occurred while editing. Please try again.",
+          "warning"
+        );
+        setBook((prev) => prev && { ...prev, is_downloaded: prevDown });
+      } else {
+        window.location.href = response?.data?.download_link;
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [book, isDownloading]);
 
   //update Rating
   const updateRating = useCallback(
@@ -116,7 +145,6 @@ export function BookCardDetails() {
       setIsUpdating(false);
     }
   }, [book, isUpdating]);
-
   // update Read state
 
   const updateRead = useCallback(async () => {
@@ -309,9 +337,19 @@ export function BookCardDetails() {
                   />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Complete later ">
-                <IconButton disabled={!token}>
-                  <BookLock style={{ color: "#455769" }} />
+              <Tooltip title="download book">
+                <IconButton
+                  aria-label="download"
+                  disabled={!token || isUpdating}
+                  onClick={download}
+                >
+                  <FileDownloadRoundedIcon
+                    sx={{
+                      color: book?.is_downloaded
+                        ? "#e61010d4"
+                        : "rgb(0 0 0 / 54%)",
+                    }}
+                  />
                 </IconButton>
               </Tooltip>
             </CardActions>

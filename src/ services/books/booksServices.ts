@@ -143,6 +143,21 @@ const isReadBook = async (idBook: number) => {
   }
 };
 
+const downloadBook = async (idBook: number) => {
+  try {
+    const response = await axiosInstance.post(`${BOOKS_URL}/${idBook}/download`);
+    console.log(response?.data?.data);
+    const result = response?.data?.data
+    return {
+      status: response.status,
+      data:result
+    };
+  } catch (error: any) {
+    return {
+      status: error?.status,
+    };
+  }
+};
 export const booksServices = {
   allBooks,
   showBook,
@@ -152,4 +167,5 @@ export const booksServices = {
   isFavBook,
   rateBook,
   isReadBook,
+  downloadBook
 };
