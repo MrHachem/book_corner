@@ -156,7 +156,7 @@ export function ProfilePage() {
     setEditMode(!editMode);
   };
   const avatar =
-    profile.gender === "male" ? "/public/male.gif" : "/public/female.gif";
+    profile.gender === "male" ? "/public/male.jpg" : "/public/female.jpg";
   return (
     <Box p={3}>
       <Grid container spacing={3}>
@@ -171,7 +171,7 @@ export function ProfilePage() {
                 sx={{ margin: "33px" }}
               >
                 <Avatar
-                  sx={{ width: 300, height: 300, mb: 2 }}
+                  sx={{ width: 250, height: 300, mb: 2 }}
                   src={avatar}
                   alt="User Avatar"
                 />
