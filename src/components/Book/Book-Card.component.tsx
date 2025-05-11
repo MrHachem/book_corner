@@ -18,7 +18,7 @@ import { Favorite } from "@mui/icons-material";
 import styles from "./Book-Card.module.css";
 import { BookOpenCheck } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import EditBook from "./CRUD_book/Edit-Book-component";
 import { booksServices } from "../../ services/books/booksServices";
 import { showNotifications } from "../../utils/notifications";

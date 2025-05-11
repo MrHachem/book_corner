@@ -17,16 +17,6 @@ type RegisterData = {
   password_confirmation?: string;
 };
 
-type EditProfile = {
-  lastname?: string;
-  firstname?: string;
-  email: string;
-  phone?: number;
-  current_password: string;
-  password?: string;
-  password_confirmation?: string;
-};
-
 const register = async (
   data: RegisterData,
   setToken: (token: string | null) => void

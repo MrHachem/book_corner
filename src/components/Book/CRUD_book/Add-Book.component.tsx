@@ -44,7 +44,6 @@ export function AddBook(props: OpenState) {
   const[display,setDisplay]=useState(false);
   const [openDialog, setOpenDialog] = useState<boolean>(props.open);
   const [authors, setAuthors] = useState<Authors[]>([]);
-  const [errorAuthor, setErrorAuthor] = useState("");
   const [selectedAuthor, setSelectedAuthor] = useState<string>(" ");
   const [isCustom, setIsCustom] = useState(false);
   const [customAuthor, setCustomAuthor] = useState("");
@@ -105,7 +104,7 @@ export function AddBook(props: OpenState) {
         setAuthors(data?.authors);
       } else {
         setAuthors([]);
-        setErrorAuthor(response?.error);
+        
       }
     };
     fetchData();
@@ -143,7 +142,7 @@ export function AddBook(props: OpenState) {
       setSelectedCategory("");
       setCoverFileRejections([]);
       setPdfFileRejections([]);
-      setErrorAuthor("");
+    
     }
   }, [props.open]);
 

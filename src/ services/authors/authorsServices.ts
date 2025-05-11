@@ -1,4 +1,3 @@
-import { showNotifications } from "../../utils/notifications";
 import axiosInstance from "../axiosInstance";
 
 const AUTHORS_URL = "/api/authors";

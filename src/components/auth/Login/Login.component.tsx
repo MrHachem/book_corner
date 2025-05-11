@@ -3,15 +3,13 @@ import styles from "./Login.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
-    Backdrop,
   Box,
   Button,
   InputAdornment,
   TextField,
-  Toolbar,
   Tooltip,
 } from "@mui/material";
-import { ArrowBack, BackHand, Backpack, Backspace, Visibility, VisibilityOff } from "@mui/icons-material";
+import { ArrowBack, Visibility, VisibilityOff } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import { getValidationObject } from "../../../utils/validation_schema.ts";
 import { showNotifications } from "../../../utils/notifications.ts";
@@ -123,13 +121,6 @@ export default function LoginComponent() {
           </Box>
           <Link to={"/auth/sign-up"}>انشاء حساب</Link>
         </div>
-        {/* <div>
-                   <div style={{backgroundColor:"#D2E0FB"}}>D2E0FB</div>
-                   <div style={{backgroundColor:"#FEF9D9"}}>FEF9D9</div>
-                   <div style={{backgroundColor:"#DEE5D4"}}>DEE5D4</div>
-                   <div style={{backgroundColor:"#8EACCD"}}>8EACCD</div>
-
-                </div> */}
       </div>
     </div>
   );

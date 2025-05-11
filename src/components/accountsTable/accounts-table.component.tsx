@@ -134,7 +134,7 @@ export default function UsersAccountTable() {
       headerName: "Full name",
       sortable: false,
       width: 130,
-      valueGetter: (value, row) =>
+      valueGetter: (_value, row) =>
         `${row.firstname || " "} ${row.lastname || " "}`,
     },
     { field: "email", headerName: "Email", width: 180 },
@@ -144,7 +144,7 @@ export default function UsersAccountTable() {
       field: "type",
       headerName: "Role",
       width: 130,
-      valueGetter: (value, row) => (row?.is_admin ? "admin" : "user"),
+      valueGetter: (_value, row) => (row?.is_admin ? "admin" : "user"),
     },
     {
       field: "is_active",

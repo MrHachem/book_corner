@@ -8,10 +8,6 @@ import {
   Button,
   Avatar,
   Grid,
-  // List,
-  // ListItem,
-  // ListItemText,
-  IconButton,
 } from "@mui/material";
 
 import { useAuth } from "../../context/AuthContext";
@@ -49,7 +45,6 @@ export function ProfilePage() {
   const profile_string = localStorage.getItem("profile");
   const profile = profile_string ? JSON.parse(profile_string) : {};
 
-  const [firstname, setFirstname] = useState();
   const navigate = useNavigate();
   const { token } = useAuth();
 

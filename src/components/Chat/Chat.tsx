@@ -15,13 +15,12 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Bot } from "lucide-react";
 import { Close } from "@mui/icons-material";
 import { chatServices } from "../../ services/chat/chatServices";
-import { string } from "yup";
 
 interface MessageProps {
   isUser: boolean;
 }
 
-const ChatButton = styled(Button)(({ theme }) => ({
+const ChatButton = styled(Button)(() => ({
   zIndex: 10000,
   position: "fixed",
   bottom: "2rem",
@@ -91,7 +90,6 @@ interface ChatMessage {
 const ChatWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [chatMessages, setChatMessages] = useState([]);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { text: "Hello! How can I help you today?", isUser: false },
   ]);

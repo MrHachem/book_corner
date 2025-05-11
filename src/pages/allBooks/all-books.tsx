@@ -268,7 +268,7 @@ export default function AllBooksPage() {
       <Pagination
         count={pagination.last_page}
         page={currentPage}
-        onChange={(event, value: number) => setCurrentPage(value)}
+        onChange={(_event, value: number) => setCurrentPage(value)}
         color="primary"
         sx={{ mt: 4, display: "flex", justifyContent: "center" }}
       />
