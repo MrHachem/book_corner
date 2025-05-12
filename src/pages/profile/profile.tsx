@@ -15,6 +15,10 @@ import { useNavigate } from "react-router-dom";
 import { showNotifications } from "../../utils/notifications";
 import { usersServices } from "../../ services/api/usersServices";
 import { authServices } from "../../ services/api/authServices";
+import { getValidationObject } from "../../utils/validation_schema";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 type EditProfile = {
   lastname?: string;
@@ -25,8 +29,30 @@ type EditProfile = {
   password?: string;
   password_confirmation?: string;
 };
+type FormData = {
+  phone: string;
+};
+
 
 export function ProfilePage() {
+
+  const formOptions = getValidationObject(["phone"]);
+
+  
+  const phoneValidationSchema = Yup.object().shape({
+    phone: Yup.string()
+      .required("Phone is required")
+      .matches(/^09\d{8}$/, "Phone number must start with 09 and be 10 digits"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: yupResolver(phoneValidationSchema), // إضافة التحقق مباشرة هنا
+  });
+
   const [user, setUser] = useState<EditProfile | null>(null);
   const [editMode, setEditMode] = useState(false);
 
@@ -108,7 +134,7 @@ export function ProfilePage() {
   const toggleEditMode = () => {
     setEditMode(!editMode);
   };
-  const handleSubmit = async () => {
+  const onSubmit = async () => {
     let data: Partial<EditProfile> = {};
     if (newFirstname && newFirstname !== user?.firstname) {
       data.firstname = newFirstname;
@@ -140,12 +166,14 @@ export function ProfilePage() {
       try {
         const response = await authServices.updateProfile(data);
         if (response?.status === 200) {
-          showNotifications("Profile has been modified successfully.","success");
-          getUser()
+          showNotifications(
+            "Profile has been modified successfully.",
+            "success"
+          );
+          getUser();
         }
       } catch (error) {
-        showNotifications("Profile was not modified successfully.","error");
-       
+        showNotifications("Profile was not modified successfully.", "error");
       }
     }
     setEditMode(!editMode);
@@ -201,7 +229,7 @@ export function ProfilePage() {
                   component="form"
                   onSubmit={(e) => {
                     e.preventDefault();
-                    handleSubmit();
+                    handleSubmit(onSubmit);
                   }}
                 >
                   <div style={{ display: "flex" }}>
@@ -236,10 +264,12 @@ export function ProfilePage() {
                     <TextField
                       sx={{ my: 1, marginRight: "7px" }}
                       fullWidth
-                      label="phone"
-                      name="phone"
+                      label="Phone"
                       defaultValue={user?.phone}
                       onKeyUp={handleKeyUp}
+                      {...register("phone")}
+                      error={!!errors.phone}
+                      helperText={errors.phone?.message}
                     />
                   </div>
 
@@ -277,14 +307,13 @@ export function ProfilePage() {
                   <Typography color="textSecondary">
                     Phone: {user?.phone}
                   </Typography>
-                  {/* <Typography color="textSecondary">password : {user?.password}</Typography> */}
                 </>
               )}
 
               <Button
                 variant="contained"
                 sx={{ mt: 2 }}
-                onClick={editMode ? handleSubmit : toggleEditMode}
+                onClick={editMode ? handleSubmit(onSubmit) : toggleEditMode}
               >
                 {editMode ? "Save" : "Edit Profile"}
               </Button>

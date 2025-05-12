@@ -139,7 +139,6 @@ export default function SignUpComponent() {
                   id="lastname"
                   label="last name"
                   autoComplete="lastname"
-                  autoFocus
                   {...register("lastname")}
                   error={!!errors.lastname}
                   helperText={errors.lastname?.message}

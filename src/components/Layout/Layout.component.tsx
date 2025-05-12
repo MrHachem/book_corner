@@ -213,7 +213,7 @@ export function Layout() {
                     </Link>
                   </Tooltip>
 
-                  <Tooltip title="تسجيل خروج">
+                  <Tooltip title="Logout">
                     <IconButton onClick={handleLogout} color="inherit">
                       <LogOutIcon />
                     </IconButton>
