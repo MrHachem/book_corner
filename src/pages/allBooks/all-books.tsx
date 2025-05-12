@@ -18,6 +18,7 @@ interface Book {
   is_favorite: boolean;
   is_read: boolean;
 }
+type BooksState = "books" | "favoriteBooks" | "readBooks" | "unReadBooks";
 
 export default function AllBooksPage() {
   const booksCache = useRef<Map<string, any[]>>(new Map());
@@ -46,19 +47,23 @@ export default function AllBooksPage() {
   const navigate = useNavigate();
 
   const { booksState } = useParams();
+
   const [openAddBook, setOpenAddBook] = useState(false);
   const userType = localStorage.getItem("userType");
 
   const getBooks = useCallback(
     async (page = 1) => {
-      const cashKey = `page-${page}`;
+      setError("");
+      const cashKey = `${booksState ?? "books"}-page-${page}`;
 
       if (booksCache.current.has(cashKey)) {
         setBooks(booksCache.current.get(cashKey)!);
+        console.log("cashKey",cashKey)
+        
         return;
       }
 
-      setError("");
+    
       setLodaing(true);
       try {
         const response = await booksServices.allBooks(
@@ -67,25 +72,18 @@ export default function AllBooksPage() {
         );
         if (response?.status === 200) {
           setLodaing(false);
-          switch (booksState ?? "books") {
-            case "books":
-              setBooks(response?.data?.books);
-              booksCache.current.set(cashKey, response?.data?.books);
-              break;
-            case "favoriteBooks":
-              setBooks(response?.data?.favorite_books);
-              booksCache.current.set(cashKey, response?.data?.favorite_books);
-              break;
-            case "readBooks":
-              setBooks(response?.data?.read_books);
-              booksCache.current.set(cashKey, response?.data?.read_books);
-              break;
-            case "unReadBooks":
-              setBooks(response?.data?.read_books);
-              booksCache.current.set(cashKey, response?.data?.read_books);
-              break;
-          }
+          const state: BooksState = (booksState ?? "books") as BooksState;
+          const dataMap = {
+            books: response?.data?.books,
+            favoriteBooks: response?.data?.favorite_books,
+            readBooks: response?.data?.read_books,
+            unReadBooks: response?.data?.unread_books,
+          };
+          const currentData = dataMap[state];
+          setBooks(currentData);
+          booksCache.current.set(cashKey, currentData);
           setPagination(response?.data?.pagination);
+
         } else if (response?.status === 404) {
           console.log(response?.error?.data?.message);
           response?.error?.data?.message === "لا يوجد كتب"
@@ -124,7 +122,7 @@ export default function AllBooksPage() {
   };
   const handleReset = () => {
     setIsSearching(false);
-    setSearchParams({ author: '', category: '', title: '' });
+    setSearchParams({ author: "", category: "", title: "" });
     setCurrentPage(1); // حتى يعيد جلب الصفحة الأولى من كل الكتب
   };
   const searchBooksWithPagination = async (
@@ -147,11 +145,10 @@ export default function AllBooksPage() {
       const response = await booksServices.searchBooks(queryParams);
 
       if (response?.status === 200) {
-        const books =response?.data?.books
-        booksCache.current.set(cashKey,books); 
+        const books = response?.data?.books;
+        booksCache.current.set(cashKey, books);
         setBooks(books);
         setPagination(response?.data?.pagination);
-       
       } else if (response?.status === 404) {
         setError("There are no books ");
       } else {
@@ -171,17 +168,15 @@ export default function AllBooksPage() {
     } else {
       getBooks(currentPage);
     }
-  }, [getBooks, currentPage, searchParams]);
+  }, [getBooks, currentPage, searchParams, booksState]);
 
   return (
     <Box className={"w-100"} sx={{ width: "100%", px: 1 }}>
-      
-        <BookSearch
-          onSearch={handleSearch}
-          searchState={searching}
-          onReset={handleReset}
-        />
-     
+      <BookSearch
+        onSearch={handleSearch}
+        searchState={searching}
+        onReset={handleReset}
+      />
 
       {token && (userType === "owner" || userType === "admin") && (
         <Box

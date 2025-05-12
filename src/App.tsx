@@ -13,6 +13,7 @@ import { Error404Component } from './components/Errors/Error404.component.tsx';
 import { BookCardDetails } from './components/index.ts';
 import { ChatButton } from './components/Chat/Button_Chat.component.tsx';
 import { UsersAccountsPage } from './pages/usersAccounts/users-accounts.tsx';
+import { AuthorsPage } from './pages/authors/authors.tsx';
 
 
 function App() {
@@ -32,6 +33,8 @@ function App() {
                                 <Route path="/all-books/book/:bookId" element={<BookCardDetails/>}/>
                                 <Route path="/all-books/booksType/:booksState" element={<AllBooksPage/>}/>
                                 <Route path="/users-accounts" element={<UsersAccountsPage/>}/>
+                                <Route path="/authors" element={<AuthorsPage/>}/>
+                                <Route path="/categories" element={<UsersAccountsPage/>}/>
                             
                             </Route>
                         </Route>

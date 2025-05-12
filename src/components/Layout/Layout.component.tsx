@@ -30,6 +30,7 @@ import { Star } from "lucide-react";
 import { authServices } from "../../ services/api/authServices";
 import { showNotifications } from "../../utils/notifications";
 import { useAuth } from "../../context/AuthContext";
+import { People } from "@mui/icons-material";
 
 type SidebarContextType = {
   open: boolean;
@@ -159,6 +160,11 @@ export function Layout() {
         text: "users accounts ",
         link: "/users-accounts",
         icon: <FaceIcon sx={{ color: "#455769" }} />,
+      });
+      menuItems.push({
+        text: "authors accounts ",
+        link: "/authors",
+        icon: <People sx={{ color: "#455769" }} />,
       });
     }
 
