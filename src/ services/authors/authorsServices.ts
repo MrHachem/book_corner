@@ -1,4 +1,3 @@
-import { Message } from "@mui/icons-material";
 import axiosInstance from "../axiosInstance";
 
 const AUTHORS_URL = "/api/authors";

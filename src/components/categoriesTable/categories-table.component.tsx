@@ -15,15 +15,15 @@ import { showNotifications } from "../../utils/notifications";
 import { useContext } from "react";
 import { SidebarContext } from "../Layout";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { authorsServices } from "../../ services/authors/authorsServices";
+import { categoriesServices } from "../../ services/categories/categoriesServices";
 
 
 const paginationModel = { page: 0, pageSize: 5 };
 interface Data {
-  authors: never[];
+  categories: never[];
   update: () => Promise<void>
 }
-export default function AuthorsTable(props:Data) {
+export default function CategoriesTable(props:Data) {
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 130 },
     { field: "name", headerName: "name", width: 130 },
@@ -47,8 +47,8 @@ export default function AuthorsTable(props:Data) {
       },
     },
     {
-      field: "user-type",
-      headerName: "change role",
+      field: "update",
+      headerName: "Update",
       width: 150,
       renderCell: (id) => <UpdateDialog params={id} />,
     },
@@ -63,49 +63,49 @@ export default function AuthorsTable(props:Data) {
   const { open } = context;
   const handleDeleteClick = (id: number) => async () => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this author?\nAll associated data will be deleted and this step cannot be undone."
+      "Are you sure you want to delete this Category?\nAll associated data will be deleted and this step cannot be undone."
     );
     if (!confirmed) {
       return;
     }
     setDeletingState(true);
-    const response = await authorsServices.deleteAuthor(id);
+    const response = await categoriesServices.deleteCategory(id);
     if (response?.status !== 200) {
       showNotifications(
         "An error occurred while editing. Please try again.",
         "warning"
       );
     } else {
-      showNotifications("User has been Deleted.", "success");
+      showNotifications("CATEGORY has been Deleted.", "success");
       props.update();
     }
     setDeletingState(false);
   };
 
   const UpdateDialog = (params: any) => {
-    const authorId = params.params.id;
+    const categoryId = params.params.id;
     const [openDialog, setOpenDialog] = useState(false);
-    const [authorName, setAuthorName] = useState("");
+    const [categoryName, setCategoryName] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleConfirm = async () => {
       setLoading(true);
       const updateData = async () => {
         try {
-          const response = await authorsServices.updateAuthor(
-            authorId,
-            authorName
+          const response = await categoriesServices.updateCategory(
+            categoryId,
+            categoryName
           );
           if (response?.status !== 200) {
             showNotifications(
-             response?.message,
+                response?.message,
               "error"
             );
             setOpenDialog(false);
           } else {
             showNotifications(`${response?.data}`, "success");
             setOpenDialog(false);
-            setAuthorName("");
+            setCategoryName("");
             props.update();
             
           }
@@ -121,18 +121,18 @@ export default function AuthorsTable(props:Data) {
 
     return (
       <>
-        <IconButton sx={{color:"#31369d",fontSize:"28px"}} onClick={() => setOpenDialog(true)}>
+        <IconButton sx={{color:"#31369d",fontSize:"25px"}} onClick={() => setOpenDialog(true)}>
           <AutoFixHighTwoToneIcon />
         </IconButton>
 
         <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-          <DialogTitle>Update author's name</DialogTitle>
+          <DialogTitle>Update Category's name</DialogTitle>
           <DialogContent>
             <TextField
-              label="author's name"
+              label="category's name"
               fullWidth
-              value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
+              value={categoryName}
+              onChange={(e) => setCategoryName(e.target.value)}
               margin="normal"
             />
           </DialogContent>
@@ -150,7 +150,7 @@ export default function AuthorsTable(props:Data) {
   return (
     <Paper sx={{ marginTop: 2, height: 500, width: open ? "700px" : "900px" }}>
       <DataGrid
-        rows={props.authors}
+        rows={props.categories}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}

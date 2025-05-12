@@ -2,36 +2,36 @@ import { useCallback, useEffect, useState } from "react";
 import { showNotifications } from "../../utils/notifications";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import AuthorsTable from "../../components/authorsTable/authors-table.component";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
 import { AddBox } from "@mui/icons-material";
-import { authorsServices } from "../../ services/authors/authorsServices";
+import CategoriesTable from "../../components/categoriesTable/categories-table.component";
+import { categoriesServices } from "../../ services/categories/categoriesServices";
 
-export function AuthorsPage() {
-  const [authors, setAuthors] = useState([]);
+export function CategoriesPage() {
+  const [categories, setCategories] = useState([]);
   const userType = localStorage.getItem("userType");
   const navigate = useNavigate();
   const { token } = useAuth();
 
   useEffect(() => {
     if (!token) {
-      showNotifications("Cannot accsess to authors page", "warning");
+      showNotifications("Cannot accsess to categories page", "warning");
       showNotifications("please signin if you have an account", "warning");
       navigate("/auth/login");
     }
     if (token) {
       if (userType === "user") {
-        showNotifications("Cannot accsess to authors page", "warning");
+        showNotifications("Cannot accsess to categories page", "warning");
         navigate("/all-books");
       }
     }
   }, [navigate, token, userType]);
 
-  const getAuthors = useCallback(async () => {
+  const getCategories = useCallback(async () => {
     try {
-      const response = await authorsServices.allAuthors();
+      const response = await categoriesServices.allCategories();
       if (response?.status === 200) {
-        setAuthors(response?.data?.authors);
+        setCategories(response?.data?.categories);
       } else {
         showNotifications(
           "perhaps there was an error, please refrech the page.",
@@ -44,18 +44,18 @@ export function AuthorsPage() {
   }, []);
 
   useEffect(() => {
-    getAuthors();
-  }, [getAuthors]);
+    getCategories();
+  }, [getCategories]);
 
   const [openDialog, setOpenDialog] = useState(false);
-    const [authorName, setAuthorName] = useState("");
+    const [categoryName, setCategoryName] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleConfirm = async () => {
       setLoading(true);
       const addData = async () => {
         try {
-          const response = await authorsServices.createAuthor(authorName);
+          const response = await categoriesServices.createCategory(categoryName);
           if (response?.status !== 200) {
             showNotifications(
               response?.message,
@@ -63,14 +63,14 @@ export function AuthorsPage() {
             );
           } else {
             showNotifications(`${response?.data}`, "success");  
-            getAuthors();
+            getCategories();
           }
         } catch (error) {
           console.log(error);
           showNotifications("please try again", "error");
         } finally {
           setOpenDialog(false);
-          setAuthorName("");
+          setCategoryName("");
           setLoading(false);
         }
       };
@@ -79,19 +79,19 @@ export function AuthorsPage() {
 
   return (
     <>
-      <IconButton sx={{color:"#31369d",fontSize:"28px"}} onClick={()=>setOpenDialog(true)}>
+      <IconButton sx={{color:"#31369d",fontSize:"25px"}} onClick={()=>setOpenDialog(true)}>
         <AddBox />
       </IconButton>
-      <AuthorsTable authors={authors} update={getAuthors} />
+      <CategoriesTable categories={categories} update={getCategories} />
 
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-          <DialogTitle>Add author</DialogTitle>
+          <DialogTitle>Add category</DialogTitle>
           <DialogContent>
             <TextField
-              label="author's name"
+              label="category's name"
               fullWidth
-              value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
+              value={categoryName}
+              onChange={(e) => setCategoryName(e.target.value)}
               margin="normal"
             />
           </DialogContent>

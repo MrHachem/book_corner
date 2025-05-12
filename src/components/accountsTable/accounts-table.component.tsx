@@ -168,7 +168,7 @@ export default function UsersAccountTable() {
         return [
           <GridActionsCellItem
             key={id}
-            icon={<DeleteIcon />}
+            icon={<DeleteIcon sx={{color:"#d68d65",fontSize:"28px"}} />}
             label="Delete"
             onClick={handleDeleteClick(Number(id))}
             color="inherit"

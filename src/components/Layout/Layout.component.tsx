@@ -24,7 +24,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
 import FaceIcon from "@mui/icons-material/Face";
-import { BookOpenCheck, LogOutIcon } from "lucide-react";
+import { BookOpenCheck, ChartColumnStacked, LogOutIcon } from "lucide-react";
 import { BookX } from "lucide-react";
 import { Star } from "lucide-react";
 import { authServices } from "../../ services/api/authServices";
@@ -165,6 +165,11 @@ export function Layout() {
         text: "authors accounts ",
         link: "/authors",
         icon: <People sx={{ color: "#455769" }} />,
+      });
+      menuItems.push({
+        text: "categories ",
+        link: "/categories",
+        icon: <ChartColumnStacked style={{ color: "#455769"}} />,
       });
     }
 
