@@ -219,7 +219,7 @@ export default function AllBooksPage() {
                 <img
                   className={styles.errorImage}
                   style={{ flexBasis: "40%" }}
-                  src="/public/system.png"
+                  src="/system.png"
                 />
 
                 <p className={styles.errorMessage}>{error} </p>

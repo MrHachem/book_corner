@@ -179,7 +179,7 @@ export function ProfilePage() {
     setEditMode(!editMode);
   };
   const avatar =
-    profile.gender === "male" ? "/public/male.jpg" : "/public/female.jpg";
+    profile.gender === "male" ? "/male.jpg" : "/female.jpg";
   return (
     <Box p={3}>
       <Grid container spacing={3}>

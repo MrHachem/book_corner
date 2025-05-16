@@ -28,7 +28,7 @@
 }
 
 .image {
-    background: url('../../../../public/Sign up.gif') no-repeat center center;
+    background: url('../../../../Sign up.gif') no-repeat center center;
     background-size: contain;
     transition: .3s all ease-in-out;
 }
@@ -40,7 +40,7 @@
 }
 
 .imageLogin {
-    background: url('../../../../public/Tablet login.gif') no-repeat center center;
+    background: url('../../../../Tablet login.gif') no-repeat center center;
     background-size: contain;
     transition: .3s all ease-in-out;
 }

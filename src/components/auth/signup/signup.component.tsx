@@ -89,7 +89,7 @@ export default function SignUpComponent() {
       <div className={styles.container}>
         <div className={styles.row}>
           <div className={styles.col1}>
-            <img src="../../../../public/Sign up.gif" />
+            <img src="../../../../Sign up.gif" />
           </div>
           <div className={styles.col2}>
             <div

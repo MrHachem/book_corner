@@ -156,7 +156,7 @@ export function BookCardComponent({
                 aria-label="recipe"
               >
                 <img
-                  src="/public/fav_icon.png"
+                  src="/fav_icon.png"
                   alt="Avatar"
                   style={{
                     width: "100%",

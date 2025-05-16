@@ -8,7 +8,7 @@ export function Error404Component()
       <div className={styles.main}>
             <div className={styles.container}>
                 <div>
-                    <img className={styles.image} src="../../../../public/404 error with people holding the numbers.gif" alt="404 error" />
+                    <img className={styles.image} src="../../../../404 error with people holding the numbers.gif" alt="404 error" />
                 </div>
             </div>
       </div>

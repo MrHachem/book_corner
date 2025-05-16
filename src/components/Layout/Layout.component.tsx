@@ -189,7 +189,7 @@ export function Layout() {
             >
               <img
                 style={{ width: 260, height: 73 }}
-                src="/public/logo.png"
+                src="/logo.png"
                 alt="Book corner Avatar"
               />
             </Link>
