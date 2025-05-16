@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { showNotifications } from "../../utils/notifications";
 import { usersServices } from "../../ services/api/usersServices";
 import { authServices } from "../../ services/api/authServices";
-import { getValidationObject } from "../../utils/validation_schema";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
