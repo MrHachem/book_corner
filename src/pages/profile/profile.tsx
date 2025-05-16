@@ -36,9 +36,6 @@ type FormData = {
 
 export function ProfilePage() {
 
-  const formOptions = getValidationObject(["phone"]);
-
-  
   const phoneValidationSchema = Yup.object().shape({
     phone: Yup.string()
       .required("Phone is required")
